@@ -1,28 +1,21 @@
 function solution(queue1, queue2) {
-    const maxIndex = queue1.length * 2 - 1;
-    let count = 0;
-    let sum1 = queue1.reduce((sum, num) => sum+num, 0);
-    let sum2 = queue2.reduce((sum, num) => sum+num, 0);
-    let start1 = 0;
-    let start2 = 0;
-    let firstEl = 0;
-    
-    while(sum1 !== sum2) {
-        if(start1 >= maxIndex && start2 >= maxIndex) return -1;
-        count++;
-        
-        if(sum1 > sum2) {
-            firstEl = queue1[start1++];
-            queue2.push(firstEl);
-            sum1 -= firstEl;
-            sum2 += firstEl;
-        } else {
-            firstEl = queue2[start2++];
-            queue1.push(firstEl);
-            sum1 += firstEl;
-            sum2 -= firstEl;
+    let answer = 0
+    const max = queue1.length*2
+    let value = queue1.reduce((acc,cur,idx)=>acc+cur-queue2[idx],0)/2
+    let [i,j] = [0,0]
+    while(value !== 0 && answer < max*2){
+        if(value > 0){
+            const v = queue1[i]
+            i++
+            value -= v
+            queue2.push(v)
+        }else{
+            const v = queue2[j]
+            j++
+            value += v
+            queue1.push(v)
         }
+        answer++
     }
-    
-    return count;
+    return value !== 0 ? -1 : answer
 }
