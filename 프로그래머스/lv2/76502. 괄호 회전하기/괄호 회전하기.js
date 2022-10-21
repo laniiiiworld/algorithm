@@ -26,6 +26,8 @@ function isCorrect(str) {
 }
 
 function solution(s) {
+    if(s.length % 2 === 1) return 0;
+    
     const sLength = s.length;
     let count =0;
     s += s;
