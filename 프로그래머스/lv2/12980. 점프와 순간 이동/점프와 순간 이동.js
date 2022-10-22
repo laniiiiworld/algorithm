@@ -1,12 +1,3 @@
-function solution(n) {
-    let count = 0;
-    while(n > 0) {
-        if(n%2) {
-            n -= 1;
-            count += 1;
-        } else {
-            n = n/2;
-        }
-    }
-    return count;
+function solution(n){
+    return n.toString(2).replaceAll('0','').length;
 }
