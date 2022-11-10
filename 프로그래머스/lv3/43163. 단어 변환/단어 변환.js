@@ -1,4 +1,6 @@
 function solution(begin, target, words) {
+    if(!words.includes(target)) return 0;
+    
     const visited = Array(words.length).fill(false);
     let answer = words.length;
     
@@ -32,5 +34,5 @@ function solution(begin, target, words) {
     
     dfs(begin, 0);
     
-    return (answer === words.length) ? 0 : answer;
+    return answer;
 }
