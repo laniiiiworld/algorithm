@@ -1,10 +1,10 @@
 # [level 2] [3차] 파일명 정렬 - 17686 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/17686) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/17686?language=javascript) 
 
 ### 성능 요약
 
-메모리: 34.5 MB, 시간: 2.38 ms
+메모리: 34.4 MB, 시간: 2.03 ms
 
 ### 구분
 
