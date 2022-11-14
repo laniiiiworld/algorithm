@@ -1,14 +1,10 @@
 function solution(dots) {
     const visited = new Array(dots.length).fill(false);
     
-    const slopeOfLine = (dot1, dot2) => {
-        return Math.abs(dot1[1]-dot2[1]) / Math.abs(dot1[0]-dot2[0]);
-    };
-    
     const getSlope = (value) => {
         const dot1 = dots[visited.indexOf(value)];
         const dot2 = dots[visited.lastIndexOf(value)];
-        return slopeOfLine(dot1, dot2);
+        return Math.abs(dot1[1]-dot2[1]) / Math.abs(dot1[0]-dot2[0]);
     };
     
     visited[0] = true;
