@@ -1,10 +1,10 @@
 # [level 2] 연속 부분 수열 합의 개수 - 131701 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/131701) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/131701?language=javascript) 
 
 ### 성능 요약
 
-메모리: 53 MB, 시간: 1259.09 ms
+메모리: 57.1 MB, 시간: 64.98 ms
 
 ### 구분
 
