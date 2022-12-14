@@ -25,5 +25,5 @@ function solution(n) {
         }
     }
     
-    return arr.reduce((acc, row) => [...acc, ...row], []);
+    return arr.flat();
 }
