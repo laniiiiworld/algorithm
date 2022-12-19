@@ -1,21 +1,16 @@
 function solution(stones, k) {
-    let left = 1;
-    let right = 200000000;
-
-    while(left <= right) {
-        const mid = (left + right) / 2 >> 0;
-
-        let count = 0;
-        for(let i = 0; i < stones.length; i++) {
-            if(stones[i] - mid <= 0) count++;
-            else count = 0;
-
-            if(count === k) break;
+    stones.push(Infinity);
+    let stack = [-1];
+    let minOfMax = Infinity;
+    for (let index = 0; index < stones.length; index++) {
+        const value = stones[index];
+        while (stones[stack[stack.length - 1]] < value) {
+            const item = stack.pop();
+            if (stack[stack.length - 1] < index - k) {
+                minOfMax = (stones[item] < minOfMax)? stones[item] : minOfMax;
+            }
         }
-
-        if(count === k) right = mid - 1;
-        else left = mid + 1;
+        stack.push(index);
     }
-
-    return left;
+    return minOfMax;
 }
