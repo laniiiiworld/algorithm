@@ -1,0 +1,11 @@
+SELECT c.CART_ID
+FROM   (SELECT CART_ID, NAME
+        FROM   CART_PRODUCTS
+        WHERE  1=1
+        AND    NAME IN ('Milk', 'Yogurt')
+        GROUP BY CART_ID, NAME
+       ) c
+WHERE  1=1
+GROUP BY c.CART_ID
+HAVING COUNT(*) > 1
+ORDER BY c.CART_ID
