@@ -5,13 +5,12 @@ function solution(ingredient) {
     for(let i=0; i<ingredient.length; i++) {
         const value = ingredient[i];
         stack.push(value);
-        if(stack.length < 4 || value !== 1) continue;
         
-        if(stack.slice(-4).join('') === '1231') {
-            count++;
-            stack.splice(-4);
-            continue;
-        }
+        if(stack.length < 4 || value !== 1) continue;        
+        if(stack.slice(-4).join('') !== '1231') continue;
+        
+        stack.splice(-4);
+        count++;
     }
     
     return count;
