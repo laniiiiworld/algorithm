@@ -58,7 +58,7 @@ function solution(input) {
     }
   }
 
-  return answer;
+  console.log(answer);
 }
 
-console.log(solution(input.slice(1).map(Number)));
+solution(input.slice(1).map(Number));
