@@ -1,22 +1,22 @@
 function solution(n, computers) {
     let count = 0;
-    const visited = Array(n).fill(false);
+    const visited = new Array(n).fill(false);
     const newNetwork = (computer) => {
-        const stack = [computer]; //연결된 컴퓨터가 있는지 확인해야 할 리스트
+        const stack = [computer];
         while(stack.length) {
-            const now = stack.pop();
+            const i = stack.pop();
+            visited[i] = true;
             for(let j=0; j<n; j++) {
-                if(!computers[now][j] || visited[j]) continue;
-                visited[j] = true; //연결되어있고, 방문한적 없는 컴퓨터 방문 처리
+                if(!computers[i][j] || visited[j]) continue;
                 stack.push(j);
             }
         }
         return 1;
     };
     
-    for(let i=0; i<n; i++) {
-        if(visited[i]) continue;
-        count += newNetwork(i);
+    for(let computer=0; computer<n; computer++) {
+        if(visited[computer]) continue;
+        count += newNetwork(computer);
     }
     
     return count;
