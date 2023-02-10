@@ -1,38 +1,23 @@
-function solution(n, vertex) {
-    const visited = new Array(n).fill(false);
-    const distance = new Array(n).fill(Infinity);
-    distance[0] = 0;
+function solution(n, edge) {
+    const distance = new Array(n+1).fill(0);
+    const gragh = Array.from({length: n+1}, () => []);
+    edge.forEach(([start, end]) => {
+        gragh[start].push(end);
+        gragh[end].push(start);
+    });
     
-    const getSmallestNode = () => {
-        let minCost = Infinity;
-        let node = -1;
-        for(let i=0; i<distance.length; i++) {
-            if(visited[i] || distance[i] >= minCost) continue;
-            minCost = distance[i];
-            node = i+1;
+    const queue = [1];
+    distance[1] = 1;
+    
+    while(queue.length) {
+        const current = queue.shift();
+        for(const node of gragh[current]) {
+            if(distance[node] > 0) continue;
+            distance[node] = distance[current] + 1;
+            queue.push(node);
         }
-        return node;
-    };
-    
-    while(visited.findIndex(value => !value) > -1){
-        const node = getSmallestNode();
-        
-        visited[node-1] = true;
-        
-        vertex.filter(item => item[0] === node || item[1] === node).forEach(([a, b]) => {
-            const calcCost = distance[node-1] + 1;
-            if(a === node) {
-                if(calcCost < distance[b-1]) {
-                    distance[b-1] = calcCost;
-                }
-            } else {
-                if(calcCost < distance[a-1]) {
-                    distance[a-1] = calcCost;
-                }
-            }
-        });
     }
     
     const max = Math.max(...distance);
-    return distance.filter(v => v === max).length;
+    return distance.filter(value => value === max).length;
 }
