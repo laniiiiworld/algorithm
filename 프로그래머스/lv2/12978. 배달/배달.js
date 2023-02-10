@@ -1,16 +1,13 @@
 function solution(N, road, K) {
-    const distance = Array.from({length: N+1}, (_, idx) => {
-                        return Array.from({length: N+1}, (v, i) => i === idx? 0 : Infinity);
-                    });
+    const distance = Array.from({length: N+1}, () => Array(N+1).fill(Infinity));
 
     //각 간선에 대한 정보 초기화
-    road.forEach(([start, end, cost]) => {
-        const min = Math.min(start, end);
-        const max = Math.max(start, end);
-        distance[min][max] = Math.min(distance[min][max], cost);
-        distance[max][min] = Math.min(distance[max][min], cost);
-    });
-
+    for(const [start, end, cost] of road) {
+        const minCost = Math.min(distance[start][end], cost);
+        distance[start][end] = minCost;
+        distance[end][start] = minCost;
+    }
+    
     //플로이드 워셜 알고리즘
     // start: 출발하는 마을
     // mid: 거쳐가는 마을
@@ -18,6 +15,10 @@ function solution(N, road, K) {
     for(let mid=1; mid<=N; mid++) {
         for(let start=1; start<=N; start++) {
             for(let end=1; end<=N; end++) {
+                if(start === end) {
+                    distance[start][end] = 0;
+                    continue;
+                }
                 const calcDistance = distance[start][mid] + distance[mid][end];
                 distance[start][end] = Math.min(distance[start][end], calcDistance);
             }
