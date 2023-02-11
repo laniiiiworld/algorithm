@@ -1,24 +1,24 @@
-// 출처: https://leetcode.com/problems/reconstruct-itinerary/solutions/437594/super-easy-and-clean-javascript-greedy-dfs-with-detailed-explanations/?languageTags=javascript
 function solution(tickets) {
     const answer = [];
-    const citiesMap = {};
-    const makeCourse = (node) => {
-        const destinations = citiesMap[node];
+    const cities = new Map();
+    const makeCourse = (start) => {
+        const destinations = cities.get(start);
         while(destinations && destinations.length) {
-            makeCourse(destinations.shift());
+              makeCourse(destinations.shift());
         }
-        answer.push(node);
+        answer.push(start);
     };
     
-    tickets.forEach(([start, end]) => {
-        if(!citiesMap[start]) citiesMap[start] = [];
-        citiesMap[start].push(end);
-    });
+    for(const [start, end] of tickets) {
+        const destinations = cities.get(start) || [];
+        cities.set(start, [...destinations, end]);
+    }
     
-    for(const city in citiesMap) {
-        citiesMap[city].sort();
-    }  
+    for(const city of cities.keys()) {
+        cities.set(city, cities.get(city).sort());
+    }
     
     makeCourse('ICN');
+    
     return answer.reverse();
 }
