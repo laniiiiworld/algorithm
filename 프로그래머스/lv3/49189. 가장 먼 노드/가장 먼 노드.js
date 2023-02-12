@@ -1,5 +1,6 @@
 function solution(n, edge) {
-    const distance = new Array(n+1).fill(0);
+    const answer = Array(n+1).fill(0);
+    const visited = Array(n+1).fill(false);
     const gragh = Array.from({length: n+1}, () => []);
     edge.forEach(([start, end]) => {
         gragh[start].push(end);
@@ -7,17 +8,18 @@ function solution(n, edge) {
     });
     
     const queue = [1];
-    distance[1] = 1;
+    visited[1] = true;
     
     while(queue.length) {
-        const current = queue.shift();
+        const current = queue.shift();        
+        
         for(const node of gragh[current]) {
-            if(distance[node] > 0) continue;
-            distance[node] = distance[current] + 1;
+            if(visited[node]) continue;
+            visited[node] = true;
             queue.push(node);
+            answer[node] = answer[current] + 1;
         }
     }
-    
-    const max = Math.max(...distance);
-    return distance.filter(value => value === max).length;
+    const max = Math.max(...answer);
+    return answer.filter(value => value === max).length;
 }
