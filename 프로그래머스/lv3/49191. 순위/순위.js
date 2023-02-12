@@ -1,28 +1,28 @@
 function solution(n, results) {
-    let answer = 0;
-    const gragh = Array.from({length: n+1}, () => ({win:new Set(), lose:new Set()}));
-    results.forEach(([won, lost]) => {
-        gragh[won].win.add(lost);
-        gragh[lost].lose.add(won);
-    });
+    // gragh[a][b]
+    //  0: 경기 정보가 없다.
+    //  1: a가 b에게 이겼다.
+    // -1: a가 b에게 졌다.
+    const gragh = Array.from({length: n+1}, () => Array(n+1).fill(0));
+    for (const [won,lost] of results) {
+        gragh[won][lost] = 1;
+        gragh[lost][won] = -1;
+    }
     
-    for(let player=1; player<=n; player++) {
-        for(const lost of gragh[player].win) {
-            for(const p of gragh[player].lose) {
-                gragh[lost].lose.add(p);
-            }
-        }
-        for(const won of gragh[player].lose) {
-            for(const p of gragh[player].win) {
-                gragh[won].win.add(p);
+    //플로이드 워샬 알고리즘
+    for (let k=1; k<=n; k++) {
+        for (let a=1; a<=n; a++) {
+            for (let b=1; b<=n; b++) {
+                if (gragh[a][b] !== 0) continue;
+                // 경기정보가 입력되지 않은 경우 경기결과 유추
+                if (gragh[a][k] === 1 && gragh[k][b] === 1) {
+                    gragh[a][b] = 1;
+                }else if (gragh[a][k] === -1 && gragh[k][b] === -1) {
+                    gragh[a][b] = -1;
+                }
             }
         }
     }
     
-    for(const player of gragh) {
-        const count = player.win.size + player.lose.size;
-        answer += (count === n-1)? 1 : 0;
-    }
-    
-    return answer;
+    return gragh.filter(a => a.filter(b => !b).length === 2).length;
 }

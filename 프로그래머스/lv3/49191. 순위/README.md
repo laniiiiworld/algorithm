@@ -1,10 +1,10 @@
 # [level 3] 순위 - 49191 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/49191) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/49191#qna) 
 
 ### 성능 요약
 
-메모리: 38.4 MB, 시간: 25.05 ms
+메모리: 38.1 MB, 시간: 13.39 ms
 
 ### 구분
 
