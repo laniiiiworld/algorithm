@@ -149,33 +149,33 @@ class MaxHeap {
 }
 
 function solution(operations) {
-    const deletedItems = new Map(); //삭제된 원소들
     const minHeap = new MinHeap();
     const maxHeap = new MaxHeap();
-    let count = 0; //이중 우선순위 큐에 남아있어야 하는 원소 수
+    const deletedNumbers = new Map();
+    let count = 0;
     
     for(const operation of operations) {
-        const [code, value] = operation.split(' ');
+        const [code, number] = operation.split(' ');
         if(code === 'I') {
             count += 1;
-            minHeap.push(value);
-            maxHeap.push(value);
+            minHeap.push(parseInt(number));
+            maxHeap.push(parseInt(number));
         } else {
             count -= count? 1 : 0;
-            let deletedItem = null;
-            if(value === '1') {
-                deletedItem = maxHeap.pop(deletedItems);
+            let removedNumber = null;
+            if(number === '1') {
+                removedNumber = maxHeap.pop(deletedNumbers);
             } else {
-                deletedItem = minHeap.pop(deletedItems);
+                removedNumber = minHeap.pop(deletedNumbers);
             }
-            if(deletedItem) {
-                deletedItem = (value === '1')? `MAX${deletedItem}` : `MIN${deletedItem}`;
-                const itemCount = deletedItems.get(deletedItem) || 0;
-                deletedItems.set(deletedItem, itemCount + 1);
+            if(removedNumber) {
+                const key = (number === '1')? `MAX${removedNumber}` : `MIN${removedNumber}`;
+                const value = deletedNumbers.get(key) || 0;
+                deletedNumbers.set(key, value + 1)
             }
         }
     }
-    const maxNumber = maxHeap.peek(deletedItems);
-    const minNumber = minHeap.peek(deletedItems); 
+    const maxNumber = maxHeap.pop(deletedNumbers);
+    const minNumber = minHeap.pop(deletedNumbers);
     return count? [maxNumber, minNumber] : [0, 0];
 }
