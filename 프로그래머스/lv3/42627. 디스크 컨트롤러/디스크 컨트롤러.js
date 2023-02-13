@@ -5,16 +5,13 @@ class MinHeap {
     isEmpty() {
         return this.heap.length === 1;
     }
-    _swap(a, b) {
-        [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
-    }
     push(item) {
         this.heap.push(item);
         
         let currentIndex = this.heap.length - 1;
         let parentIndex = Math.floor(currentIndex / 2);
         
-        while(parentIndex !== 0 && item[1] < this.heap[parentIndex][1]) {
+        while(currentIndex > 1 && this.heap[currentIndex][1] < this.heap[parentIndex][1]) {
             this._swap(currentIndex, parentIndex);
             currentIndex = parentIndex;
             parentIndex = Math.floor(currentIndex / 2);
@@ -39,9 +36,11 @@ class MinHeap {
             return returnItem;
         }
         
-        while((this.heap[leftIndex][1] < this.heap[currentIndex][1]) ||
-              (this.heap[rightIndex][1] < this.heap[currentIndex][1])) {
-            const minIndex = (this.heap[leftIndex][1] < this.heap[rightIndex][1]) ? leftIndex : rightIndex;
+        while(
+              (this.heap[leftIndex][1] < this.heap[currentIndex][1]) || 
+              (this.heap[rightIndex][1] < this.heap[currentIndex][1])
+            ) {
+            const minIndex = this.heap[leftIndex][1] < this.heap[rightIndex][1] ? leftIndex : rightIndex;
             this._swap(minIndex, currentIndex);
             currentIndex = minIndex;
             leftIndex = currentIndex * 2;
@@ -51,36 +50,37 @@ class MinHeap {
         
         return returnItem;
     }
+    _swap(a, b) {
+        [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
+    }
 }
-
 function solution(jobs) {
     jobs.sort((a, b) => b[0] - a[0] || b[1] - a[1]);
     const length = jobs.length;
+    const heap = new MinHeap(); // 대기열
+    let time = 0; // 현재 시간
+    let totalWorkTime = 0; // 현재까지 작업에 소요된 시간
     
-    const heap = new MinHeap(); //현재 요청중인 작업들
-    let totalWorkTime = 0; //작업의 요청부터 종료까지 걸린 "총" 시간
-    let time = 0; //현재 시간
-    
-    while(jobs.length || !heap.isEmpty()) {
-        let job = null;
-        let workTime = 0;
-        
+    // 현재 요청시간이 지난 작업들을 대기열에 추가
+    const addNewJobs = () => {
         while(jobs.length && jobs[jobs.length - 1][0] <= time) {
             heap.push(jobs.pop());
         }
+    };
+    
+    while(jobs.length || !heap.isEmpty()) {
+        addNewJobs();
         
         if(heap.isEmpty()) {
-            job = jobs.pop();
-            time = job[0];
-            heap.push(job);
+            time = jobs[jobs.length - 1][0];
+            addNewJobs();
         }
         
-        job = heap.pop();
-        workTime = job[1] + time - job[0];
-        totalWorkTime += workTime;
-        time += job[1];
+        const [startTime, workTime] = heap.pop();
+        const waitingTime = time - startTime;
+        time += workTime;
+        totalWorkTime += waitingTime + workTime;
     }
     
     return Math.floor(totalWorkTime / length);
 }
-
