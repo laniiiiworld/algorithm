@@ -1,12 +1,12 @@
 function solution(tickets) {
     const answer = [];
     const cities = new Map();
-    const makeCourse = (start) => {
-        const destinations = cities.get(start);
+    const makeCourse = (city) => {
+        const destinations = cities.get(city) || [];
         while(destinations && destinations.length) {
-              makeCourse(destinations.shift());
+            makeCourse(destinations.shift());
         }
-        answer.push(start);
+        answer.push(city);
     };
     
     for(const [start, end] of tickets) {
@@ -14,8 +14,8 @@ function solution(tickets) {
         cities.set(start, [...destinations, end]);
     }
     
-    for(const city of cities.keys()) {
-        cities.set(city, cities.get(city).sort());
+    for(const start of cities.keys()) {
+        cities.set(start, cities.get(start).sort());
     }
     
     makeCourse('ICN');
