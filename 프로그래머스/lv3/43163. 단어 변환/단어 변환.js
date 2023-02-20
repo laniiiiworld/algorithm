@@ -17,7 +17,6 @@ function solution(begin, target, words) {
             answer = Math.min(answer, count);
             return;
         }
-        if(!visited.includes(false)) return;
         
         for(let i=0; i<words.length; i++) {
             if(visited[i]) continue;
