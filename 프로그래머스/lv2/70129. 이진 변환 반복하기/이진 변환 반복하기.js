@@ -1,18 +1,9 @@
 function solution(s) {
-    const count = [0, 0];
-    
-    while(s !== '1') {
-        let str = '';
-        for(let i=0; i<s.length; i++) {
-            if(s[i] === '0') {
-                count[1] += 1;
-                continue;
-            }
-            str += '1';
-        }
-        s = (str.length).toString(2);
-        count[0] += 1;
+    var answer = [0,0];
+    while(s.length > 1) {
+        answer[0]++;
+        answer[1] += (s.match(/0/g)||[]).length;
+        s = s.replace(/0/g, '').length.toString(2);
     }
-    
-    return count;
+    return answer;
 }
