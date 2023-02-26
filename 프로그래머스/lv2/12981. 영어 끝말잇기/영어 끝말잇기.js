@@ -1,17 +1,23 @@
 function solution(n, words) {
-    let toldwords = [words[0]]; //이전에 등장했던 단어들
-    let index = 0;
+    const calledWords = new Set();
+    let lastLetter = words[0].charAt(words[0].length - 1);
+    let i=1;
     
-    while (++index < words.length) {
-        const word = words[index];
-        //이전에 등장했던 단어인 경우
-        if(toldwords.some(value => value === word)) break;
-        //앞사람이 말한 단어의 마지막 문자로 시작하지 않는 경우
-        if(toldwords[toldwords.length-1].slice(-1) !== word[0]){
-            break;
+    calledWords.add(words[0]);
+    
+    while(i < words.length) {
+        const word = words[i];
+        //규칙1 앞사람이 말한 단어의 마지막 문자로 시작
+        //규칙2 이전에 등장했던 단어 사용X
+        if(word.charAt(0) !== lastLetter || calledWords.has(word)) {
+            return [i % n + 1, Math.ceil((i + 1) / n)];
         }
-        toldwords.push(word);
+        
+        lastLetter = word.charAt(word.length - 1);
+        calledWords.add(word);
+        
+        i += 1;
     }
     
-    return index < words.length? [index%n + 1, Math.ceil((index+1)/n)] : [0,0];
+    return [0, 0];
 }
