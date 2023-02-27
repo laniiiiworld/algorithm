@@ -1,9 +1,12 @@
 function solution(n) {
-    const stack = [1];
-    while(stack.length < n) {
-        const a = stack[stack.length - 2] || 1;
-        const b = stack[stack.length - 1];
-        stack.push((a + b) % 1234567);
+    if(n === 1) return 1;
+    
+    let numbers = [1, 2];
+    while(numbers.length < n) {
+        const a = numbers[numbers.length - 2];
+        const b = numbers[numbers.length - 1];
+        numbers.push((a + b)  % 1234567);
     }
-    return stack[stack.length - 1];
+    
+    return numbers[numbers.length - 1];
 }
