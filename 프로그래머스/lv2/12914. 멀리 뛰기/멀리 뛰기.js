@@ -1,12 +1,10 @@
 function solution(n) {
-    if(n === 1) return 1;
-    
-    let numbers = [1, 2];
-    while(numbers.length < n) {
-        const a = numbers[numbers.length - 2];
-        const b = numbers[numbers.length - 1];
-        numbers.push((a + b)  % 1234567);
+    const stack = [1];
+    while(stack.length < n) {
+        //(n칸을 뛰는 방법) = (1칸을 뛰고 n-1칸을 뛰는 방법) + (2칸을 뛰고 n-2칸을 뛰는 방법)
+        const a = stack[stack.length - 2] || 1;
+        const b = stack[stack.length - 1];
+        stack.push((a + b) % 1234567);
     }
-    
-    return numbers[numbers.length - 1];
+    return stack[stack.length - 1];
 }
