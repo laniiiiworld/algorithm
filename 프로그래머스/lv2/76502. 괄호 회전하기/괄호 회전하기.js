@@ -20,13 +20,14 @@ function solution(s) {
                 }
             }
         }
-        return sum === 0 && stack.length === 0;
+        return stack.length === 0;
     };
     
     let answer = 0;
     for(let i=0; i<s.length; i++) {
-        const str = s.slice(i) + s.slice(0, i);
-        if(isCorrect(str)) answer += 1;
+        if(!isCorrect(s.slice(i) + s.slice(0, i))) continue;
+        
+        answer += 1;
     }
     return answer;
 }
