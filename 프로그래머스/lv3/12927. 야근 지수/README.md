@@ -1,10 +1,10 @@
 # [level 3] 야근 지수 - 12927 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12927#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12927?language=javascript) 
 
 ### 성능 요약
 
-메모리: 36.9 MB, 시간: 37.21 ms
+메모리: 36.2 MB, 시간: 34.95 ms
 
 ### 구분
 
