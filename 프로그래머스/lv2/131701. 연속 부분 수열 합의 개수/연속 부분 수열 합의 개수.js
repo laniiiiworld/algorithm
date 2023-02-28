@@ -1,11 +1,12 @@
 function solution(elements) {
-    const sums = new Set(elements);
-    const numbers = [...elements, ...elements];
-    for(let length=2; length<=elements.length; length++) {
-        for(let i=0; i<elements.length; i++) {
-            const sum = numbers.slice(i, i+length).reduce((sum, cur) => sum += cur);
-            sums.add(sum);
+    const circular = elements.concat(elements);
+    const set = new Set();
+    for (let i = 0; i < elements.length; i++) {
+        let sum = 0;
+        for (let j = 0; j < elements.length; j++) {
+            sum += circular[i + j];
+            set.add(sum);
         }
     }
-    return sums.size;
+    return set.size;
 }
