@@ -1,14 +1,20 @@
 function solution(n, left, right) {
-    const startLine = Math.floor(left/n);
-    const endLine = Math.floor(right/n);
-    let index = startLine;
-    return new Array(endLine - startLine + 1).fill(0)
-                       .reduce((acc, value) => {
-                            const line = new Array(n).fill(0).map((v,i) => {
-                                return (i<=index)? index + 1 : i + 1;
-                            });
-                            index++;
-                            return acc.concat(line);
-                        }, [])
-                        .slice(left - startLine * n, right - startLine * n + 1);
+    const answer = [];
+    const start = [Math.floor(left/n)+1 , left % n + 1];
+    const end = [Math.floor(right/n)+1 , right % n + 1];
+    
+    let [row, col] = start;
+    while(row <= end[0]) {
+        while(
+              (row < end[0] && col <= n) ||
+              (row === end[0] && col <= end[1])
+             ) {
+            if(col<=row) answer.push(row);
+            else         answer.push(col);
+            col += 1;
+        }
+        row += 1;
+        col = 1;
+    }
+    return answer;
 }
