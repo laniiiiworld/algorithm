@@ -1,11 +1,15 @@
 function solution(n, s) {
-    const nums = [];
-    for(let i=0; i<n; i++) {
-        if(i >= n - s % n) {
-            nums.push(Math.ceil(s/n));
-            continue;
+    const value = Math.floor(s / n);
+    
+    if(value === 0) return [-1];
+    
+    const rest = s % n;
+    const answer = Array.from({length: n}, (_, i) => {
+        if(rest && n - rest <= i) {
+            return value + 1;
         }
-        nums.push(Math.floor(s/n));
-    }
-    return n <= s? nums : [-1];
+        return value;
+    });
+    
+    return answer;
 }
