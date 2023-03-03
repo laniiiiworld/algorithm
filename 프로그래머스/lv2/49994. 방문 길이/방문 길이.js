@@ -1,48 +1,32 @@
 function solution(dirs) {
-    const visited = [];
-    const coordinate = [0, 0];
+    const visited = new Set();
+    let [beforeX, beforeY] = [0, 0];
     
-    const addDirection = (type, small, big, anotherValue) => {
-        const isOldWay = visited.some(item => {
-            return item.type === type 
-                    && item.small === small 
-                    && item.big === big 
-                    && item.anotherValue === anotherValue;
-        });
+    for(let i=0; i<dirs.length; i++) {
+        const command = dirs.charAt(i);
+        let [x, y] = [beforeX, beforeY];
         
-        if(isOldWay) return;
-        
-        visited.push({type, small, big, anotherValue});
-    };
-    
-    dirs.split('').forEach(dir => {
-        const [x, y] = coordinate;
-        
-        switch(dir) {
-            case 'U':
-                if(y === 5) break;
-                coordinate[1]++;
-                addDirection('Y', y, coordinate[1], x);
-                break;
-            case 'D':
-                if(y === -5) break;
-                coordinate[1]--;
-                addDirection('Y', coordinate[1], y, x);
-                break;
-            case 'R':
-                if(x === 5) break;
-                coordinate[0]++;
-                addDirection('X', x, coordinate[0], y);
-                break;
-            case 'L':
-                if(x === -5) break;
-                coordinate[0]--;
-                addDirection('X', coordinate[0], x, y);
-                break;
-            default:
-                break;
+        if(command === 'L' && x-1 >= -5) {
+            x -= 1;
+        } else if(command === 'R' && x+1 <= 5) {
+            x += 1;
+        } else if(command === 'U' && y+1 <= 5) {
+            y += 1;
+        } else if(command === 'D' && y-1 >= -5) {
+            y -= 1;
+        } else {
+            continue;
         }
-    });
+        
+        const arr = [[beforeX, beforeY], [x, y]]
+                        .sort((a, b) => a[0] - b[0] || a[1] - b[1])
+                        .map(item => `${item[0]}${item[1]}`)
+                        .join('');
+        
+        visited.add(arr);
+        
+        [beforeX, beforeY] = [x, y];
+    }
     
-    return visited.length;
+    return visited.size;
 }
