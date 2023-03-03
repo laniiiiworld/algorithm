@@ -1,23 +1,21 @@
 function solution(records) {
+    const message = {
+                     'Enter' : '님이 들어왔습니다.',
+                     'Leave' : '님이 나갔습니다.'
+                    };
     const names = new Map();
     const answer = [];
+    
     for(const record of records) {
         const [command, id, nickname] = record.split(' ');
         
-        if(command === 'Leave') {
-            answer.push(`${id}님이 나갔습니다.`);
-            continue;
-        }
-        
-        names.set(id, nickname);
-        
-        if(command === 'Enter') {
-            answer.push(`${id}님이 들어왔습니다.`);
+        if(command !== 'Change') {
+            answer.push([id, command]);
+        }    
+        if(nickname) {
+            names.set(id, nickname);
         }
     }
     
-    return answer.map(sentence => {
-        const id = sentence.substr(0, sentence.indexOf('님'));
-        return sentence.replace(id, names.get(id));
-    });
+    return answer.map(([id, command]) => `${names.get(id)}${message[command]}`);
 }
