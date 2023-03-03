@@ -1,10 +1,10 @@
 # [level 2] 방문 길이 - 49994 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/49994) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/49994?language=javascript) 
 
 ### 성능 요약
 
-메모리: 34.4 MB, 시간: 1.34 ms
+메모리: 34.3 MB, 시간: 1.43 ms
 
 ### 구분
 

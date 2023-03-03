@@ -1,20 +1,18 @@
 function solution(dirs) {
+    const commands = {
+                    'L': [-1, 0],
+                    'R': [1, 0],
+                    'U': [0, 1],
+                    'D': [0, -1]
+                  };
     const visited = new Set();
     let [beforeX, beforeY] = [0, 0];
     
     for(let i=0; i<dirs.length; i++) {
         const command = dirs.charAt(i);
-        let [x, y] = [beforeX, beforeY];
+        let [x, y] = [beforeX + commands[command][0], beforeY + commands[command][1]];
         
-        if(command === 'L' && x-1 >= -5) {
-            x -= 1;
-        } else if(command === 'R' && x+1 <= 5) {
-            x += 1;
-        } else if(command === 'U' && y+1 <= 5) {
-            y += 1;
-        } else if(command === 'D' && y-1 >= -5) {
-            y -= 1;
-        } else {
+        if(x < -5 || y < -5 || x > 5 || y > 5) {
             continue;
         }
         
