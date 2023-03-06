@@ -1,18 +1,15 @@
 function solution(n, stations, w) {
-    let answer = 0;
-    let bfStation = 0;
-    const width = w*2 + 1;
-    
-    for(let i=0; i<stations.length; i++) {
-        const distance = (i === 0)? w + 1 : width;
-        const count = Math.ceil((stations[i] - bfStation - distance)/width);
-        if(count > 0) answer += count;
-        bfStation = stations[i];
+    if(stations[stations.length - 1] + w < n) {
+        stations.push(n + w + 1);
     }
+
+    const size = 2 * w + 1;
+    let before = - w;
     
-    if(bfStation < n - w) {
-        answer += Math.ceil((n - bfStation - w)/width);
-    }
-    
-    return answer;
+    return stations.reduce((sum, cur) => {
+        const difference = (cur - w) - (before + w + 1);
+        before = cur;
+        if(difference < 0) return sum;       
+        return sum += Math.ceil(difference / size);
+    }, 0);
 }
