@@ -1,29 +1,15 @@
 function solution(n) {
-    const arr = Array.from(Array(n), (item, i) => Array(i+1).fill(0));
-    const getMax = (n) => {
-        let sum = 0;
-        for(let i=1; i<=n; i++) {
-            sum += i;
-        }
-        return sum;
-    };
-    const max = getMax(n);
-    let num = 0;
-    let [x, y] = [0, -1];
-    let flag = 'D';
+    const numbers = Array.from({length: n}, (_, i) => new Array(i + 1).fill(0));
+    let [x, y] = [-1, 0];
+    let number = 0;
+    let count = 0;
     
-    while(num < max) {
-        if(flag === 'D'){
-            arr[++y][x] = ++num;
-            if(y === n-1 || arr[y+1][x]) flag = 'R';
-        } else if(flag === 'R') {
-            arr[y][++x] = ++num;
-            if(x === arr[y].length - 1 || arr[y][x+1]) flag = 'U';
-        } else {
-            arr[--y][--x] = ++num;
-            if(arr[y-1][x-1]) flag = 'D';
-        }
+    for (let row = n; row > 0; row -= 3) {
+        numbers[++x][y] = ++number;
+        for (count = 0; count < row-1; count++) numbers[++x][y] = ++number;
+        for (count = 0; count < row-1; count++) numbers[x][++y] = ++number;
+        for (count = 0; count < row-2; count++) numbers[--x][--y] = ++number;
     }
     
-    return arr.flat();
+    return numbers.flat();
 }
