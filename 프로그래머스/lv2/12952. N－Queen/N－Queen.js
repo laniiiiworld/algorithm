@@ -1,25 +1,24 @@
 function solution(n) {
     let count = 0;
-    const queen = Array(n).fill(0); //index : 행, queen[index] : 열
-    const check = (row) => {
-        for(let i=0; i<row; i++) {
-            if(queen[i] === queen[row] || Math.abs(queen[i] - queen[row]) === (row - i)) {
-                return false;
-            }
-        }
-        return true;
-    };
-    const search = (row) => {
-        if(row === n) count += 1;
+    const queens = [];
+    const dfs = (row, col) => {
+        if(queens.findIndex(([y, x]) => y === row || x === col || Math.abs(row - y) === Math.abs(col - x)) > -1) return;
         
-        for(let col=0; col<n; col++) {
-            queen[row] = col;
-            if(!check(row)) continue;
-            search(row+1);
+        if(row === n - 1) {
+            count += 1;
+            return;
+        }      
+        
+        for(let j=0; j<n; j++) {
+            queens.push([row, col]);
+            dfs(row + 1, j);
+            queens.pop([row, col]);
         }
     };
     
-    search(0);
+    for(let i=0; i<n; i++) {
+        dfs(0, i);
+    }
     
     return count;
 }
