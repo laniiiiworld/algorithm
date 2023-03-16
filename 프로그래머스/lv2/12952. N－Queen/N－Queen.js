@@ -1,24 +1,21 @@
 function solution(n) {
     let count = 0;
     const queens = [];
-    const dfs = (row, col) => {
-        if(queens.findIndex(([y, x]) => y === row || x === col || Math.abs(row - y) === Math.abs(col - x)) > -1) return;
-        
-        if(row === n - 1) {
+    const dfs = (row) => {
+        if(row === n) {
             count += 1;
             return;
-        }      
+        }
         
-        for(let j=0; j<n; j++) {
+        for(let col = 0; col < n; col++) {
+            if(queens.findIndex(([y, x]) => y === row || x === col || row - y === Math.abs(col - x)) > -1) continue;
             queens.push([row, col]);
-            dfs(row + 1, j);
-            queens.pop([row, col]);
+            dfs(row + 1);
+            queens.pop();
         }
     };
     
-    for(let i=0; i<n; i++) {
-        dfs(0, i);
-    }
+    dfs(0);
     
     return count;
 }
