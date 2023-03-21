@@ -1,33 +1,33 @@
 function solution(begin, target, words) {
+    const n = words.length;
+    const m = words[0].length;
+    
     if(!words.includes(target)) return 0;
     
-    let answer = words.length;
-    const visited = Array(words.length).fill(false);
-    const isChange = (origin, changed) => {
+    let answer = n;
+    const visited = Array(n).fill(false);
+    const isChange = (before, after) => {
         let count = 0;
-        for(let i=0; i<origin.length; i++) {
-            if(count > 1) break;
-            if(origin[i] === changed[i]) continue;
-            count += 1;
+        for(let i = 0; i < m; i++) {
+            if(before[i] !== after[i]) count += 1;
         }
         return count === 1;
     };
-    const changeWord = (word, count) => {
+    const dfs = (count, word) => {
         if(word === target) {
-            answer = Math.min(answer, count);
+            answer = (count < answer)? count : answer;
             return;
         }
         
-        for(let i=0; i<words.length; i++) {
-            if(visited[i]) continue;
-            if(!isChange(word, words[i])) continue;
+        for(let i = 0; i < n; i++) {
+            if(visited[i] || !isChange(word, words[i])) continue;
             visited[i] = true;
-            changeWord(words[i], count + 1);
+            dfs(count + 1, words[i]);
             visited[i] = false;
         }
     };
     
-    changeWord(begin, 0);
+    dfs(0, begin);
     
     return answer;
 }
