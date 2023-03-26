@@ -1,20 +1,22 @@
 function solution(food_times, k) {
-    let foods = food_times.map((time, index) => ({number: index+1, time}))
-                          .sort((a, b) => b.time - a.time);
-    let previous = 0;
-    while(foods.length) {
-        const remainFoodsLength = foods.length;
-        const currentTime = foods[remainFoodsLength - 1].time;
-        const eatingTime = (currentTime - previous) * remainFoodsLength;
-        previous = currentTime;
-        
-        if (k < eatingTime) {
-            foods = [...foods].sort((a,b) => a.number - b.number);
-            return foods[k % remainFoodsLength].number;
+    let sortedFood = food_times
+                        .map((time, index) => ({ time, index: index + 1 }))
+                        .sort((a, b) => a.time - b.time );
+
+    let beforeTime = 0;
+    for (let i = 0; i < sortedFood.length; i += 1) {
+        const time = sortedFood[i].time;
+        const cycle = sortedFood.length - i;
+        const cycleTime = (time - beforeTime) * cycle;
+
+        if (k < cycleTime) {
+          const answer = sortedFood.slice(i).sort((a, b) => a.index - b.index);
+          return answer[k % cycle].index;
         }
-        k -= eatingTime;
-        foods.pop();
+
+        k -= cycleTime;
+        beforeTime = time;
     }
-    
+
     return -1;
 }
