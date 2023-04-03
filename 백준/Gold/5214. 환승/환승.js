@@ -20,7 +20,7 @@ class Queue {
 
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 const [n, k, m] = input[0].split(' ').map(Number);
-const visited = Array(n + m + 1).fill(false);
+const visited = new Set();
 const graph = Array.from({length: n + m + 1}, () => []);
 for(let i = 1; i <= m; i++) {
     const arr = input[i].split(' ').map(Number);
@@ -37,15 +37,15 @@ queue.enqueue([1, 1]);
 while(queue.size()) {
     const [start, distance] = queue.dequeue();
     
-    if(visited[start]) continue;
+    if(visited.has(start)) continue;
     if(start === n) {
         answer = distance;
         break;
     }
-    visited[start] = true;
+    visited.add(start);
     
     for(const end of graph[start]) {
-        if(visited[end]) continue;
+        if(visited.has(end)) continue;
         queue.enqueue([end, distance + 1]);
     }
 }
