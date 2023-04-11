@@ -1,10 +1,14 @@
 function solution(land) {
-    return Math.max(...land.reduce((a, c) => {
-        return [
-            c[0] + Math.max(a[1], a[2], a[3]),  
-            c[1] + Math.max(a[0], a[2], a[3]),
-            c[2] + Math.max(a[0], a[1], a[3]),
-            c[3] + Math.max(a[0], a[1], a[2]),
-        ];
-    }, [0, 0, 0, 0]));
+    for(let i = 1; i < land.length; i++) {
+        const row = [0, 0, 0, 0];
+        for(let j = 0; j < 4; j++) {
+            for(let k = 0; k < 4; k++) {
+                if(j === k) continue;
+                row[j] = Math.max(row[j], land[i - 1][k] + land[i][j]);
+            }
+        }
+        land[i] = row;
+    }
+    
+    return Math.max(...land[land.length - 1]);
 }
