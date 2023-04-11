@@ -1,10 +1,10 @@
 function solution(n) {
-    const stack = [1];
-    while(stack.length < n) {
-        //(n칸을 뛰는 방법) = (1칸을 뛰고 n-1칸을 뛰는 방법) + (2칸을 뛰고 n-2칸을 뛰는 방법)
-        const a = stack[stack.length - 2] || 1;
-        const b = stack[stack.length - 1];
-        stack.push((a + b) % 1234567);
+    const dp = Array(n + 1).fill(0);
+    dp[1] = 1;
+    dp[2] = 2;
+    for(let i = 3; i <= n; i++) {
+        dp[i] = (dp[i - 1] + dp[i - 2]) % 1234567;
     }
-    return stack[stack.length - 1];
+    
+    return dp[n];
 }
