@@ -1,15 +1,27 @@
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 const n = Number(input[0]);
 const arr = input[1].split(' ').map(Number);
-const dp = Array(n).fill(1);
 
-for(let i = 1; i < n; i++) {
-    let max = 0;
-    for(let j = 0; j < i; j++) {
-        if(arr[i] >= arr[j]) continue;
-        max = Math.max(max, dp[j]);
+const getLeftIndex = (arr, target, start, end) => {
+    while(start < end) {
+        const mid = Math.floor((start + end) / 2);
+        if(arr[mid] <= target) {
+            end = mid;
+        } else {
+            start = mid + 1;
+        }
     }
-    dp[i] = max + 1;
+    return end;
+};
+
+const answer = [Infinity];
+for(const value of arr) {
+    if(answer[answer.length - 1] > value) {
+        answer.push(value);
+    } else {
+        const leftIndex = getLeftIndex(answer, value, 0, answer.length);
+        answer[leftIndex] = value;
+    }
 }
 
-console.log(n - Math.max(...dp));
+console.log(n - (answer.length - 1));
