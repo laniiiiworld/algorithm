@@ -30,7 +30,7 @@ function solution(queue1, queue2) {
     }
     
     let answer = 0;
-    let count = queue1.length * 4;
+    let count = queue1.length * 3;
     while(count--) {
         if(sum1 === sum2) {
             return answer;
