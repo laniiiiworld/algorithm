@@ -1,10 +1,10 @@
 # [level 3] 숫자 게임 - 12987 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12987#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12987) 
 
 ### 성능 요약
 
-메모리: 45.1 MB, 시간: 73.01 ms
+메모리: 53.9 MB, 시간: 92.43 ms
 
 ### 구분
 
@@ -12,7 +12,7 @@
 
 ### 채점결과
 
-<br/>정확성: 85.7<br/>효율성: 14.3<br/>합계: 100.0 / 100.0
+Empty
 
 ### 문제 설명
 
