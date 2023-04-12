@@ -1,25 +1,19 @@
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 const n = Number(input[0]);
 const arr = input[1].split(' ').map(Number);
-const total = Number(input[2]);
+const m = Number(input[2]);
 
-const getMaximumPrice = (arr, total) => {
-    let sum = arr.reduce((sum, cur) => sum += cur, 0);
-    let start = 0;
-    let end = Math.max(...arr);
+let left = 0;
+let right = Math.max(...arr);
+while(left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const sum = arr.reduce((acc, cur) => acc += (mid < cur)? mid : cur, 0);
     
-    if(sum <= total) return end;
-    
-    while(start <= end) {
-        const mid = parseInt((start + end) / 2);
-        sum = arr.reduce((sum, cur) => sum += (mid < cur)? mid : cur, 0);
-        
-        if(sum === total) return mid;
-        else if(sum > total) end = mid - 1;
-        else start = mid + 1;
+    if(sum <= m) {
+        left = mid + 1;
+    } else {
+        right = mid - 1;
     }
-    
-    return end;
-};
+}
 
-console.log(getMaximumPrice(arr, total));
+console.log(right);
