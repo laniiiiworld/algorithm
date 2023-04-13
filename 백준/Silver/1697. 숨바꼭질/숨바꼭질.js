@@ -27,17 +27,25 @@ queue.enqueue([n, 0]);
 
 while(queue.size()) {
     const [now, count] = queue.dequeue();
-    if(now < 0 || now > 100_000 || visited.has(now)) continue; 
     if(now === k) {
         answer = Math.min(answer, count);
         break;
     }
     
-    visited.add(now);
-    
-    queue.enqueue([now - 1, count + 1]);
-    queue.enqueue([now + 1, count + 1]);
-    queue.enqueue([now * 2, count + 1]);
+    for(const operate of ['-', '+', '*']) {
+        let next = now;
+        if(operate === '-') {
+            next -= 1;
+        } else if(operate === '+') {
+            next += 1;
+        } else {
+            next *= 2;
+        }
+        
+        if(next < 0 || next > 100_000 || visited.has(next)) continue; 
+        visited.add(next);
+        queue.enqueue([next, count + 1]);
+    }
 }
 
 console.log(answer);
