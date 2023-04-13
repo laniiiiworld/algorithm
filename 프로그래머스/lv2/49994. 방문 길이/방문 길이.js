@@ -1,30 +1,24 @@
 function solution(dirs) {
-    const commands = {
-                    'L': [-1, 0],
-                    'R': [1, 0],
-                    'U': [0, 1],
-                    'D': [0, -1]
-                  };
+    const directions = {'U': [1, 0], 'D': [-1, 0], 'L': [0, -1], 'R': [0, 1]};
     const visited = new Set();
-    let [beforeX, beforeY] = [0, 0];
-    
-    for(let i=0; i<dirs.length; i++) {
-        const command = dirs.charAt(i);
-        let [x, y] = [beforeX + commands[command][0], beforeY + commands[command][1]];
+    const dfs = (x, y, index) => {
+        if(index === dirs.length) return;
         
-        if(x < -5 || y < -5 || x > 5 || y > 5) {
-            continue;
+        const [plusY, plusX] = directions[dirs[index]];
+        let nextX = x + plusX;
+        let nextY = y + plusY;
+        if(nextX < -5 || nextX > 5) {
+            nextX = x;
+        }else if(nextY < -5 || nextY > 5) {
+            nextY = y;
+        } else {
+            visited.add(`${Math.min(x, nextX)} ${Math.min(y, nextY)} ${Math.max(x, nextX)} ${Math.max(y, nextY)}`);
         }
         
-        const arr = [[beforeX, beforeY], [x, y]]
-                        .sort((a, b) => a[0] - b[0] || a[1] - b[1])
-                        .map(item => `${item[0]}${item[1]}`)
-                        .join('');
-        
-        visited.add(arr);
-        
-        [beforeX, beforeY] = [x, y];
-    }
+        dfs(nextX, nextY, index + 1);
+    };
+    
+    dfs(0, 0, 0);
     
     return visited.size;
 }
