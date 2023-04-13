@@ -1,20 +1,20 @@
 function solution(k, dungeons) {
     let answer = 0;
     const visited = Array(dungeons.length).fill(false);
-    const goNextDungeons = (fatigue, count) => {
-        answer = Math.max(count, answer);
+    const dfs = (hp, count) => {
+        answer = Math.max(answer, count);
         
-        for(let i=0; i<dungeons.length; i++) {
-            const [minimum, consumption] = dungeons[i];
-            if(fatigue >= minimum && !visited[i]) {
-                visited[i] = true;
-                goNextDungeons(fatigue - consumption, count + 1);
-                visited[i] = false;
-            }
+        for(let i = 0; i < dungeons.length; i++) {
+            const [minHp, usedHp] = dungeons[i];
+            if(visited[i]) continue;
+            if(hp < minHp || hp - usedHp < 0) continue;
+            visited[i] = true;
+            dfs(hp - usedHp, count + 1);
+            visited[i] = false;
         }
     };
     
-    goNextDungeons(k, 0);
+    dfs(k, 0);
     
     return answer;
 }
