@@ -1,22 +1,23 @@
-function solution(word) {
-    const dictionary = ['A', 'E', 'I', 'O', 'U'];
-    const n = dictionary.length;
+function solution(target) {
+    let answer = -1;
     let isFind = false;
-    let count = -1;
-    
-    const dfs = (letters) => {
-        count += 1;
-        isFind = letters === word;
+    const letters = ['A', 'E', 'I', 'O', 'U'];
+    const dfs = (word) => {
+        answer += 1;
         
-        if (letters.length === n || isFind) return;
-
-        for (let i = 0; i < n; i++) {
-            if (isFind) break;
-            dfs(letters + dictionary[i]);
+        if(word === target) {
+            isFind = true;
+            return;
+        }
+        if(word.length === 5) return;
+        
+        for(let i = 0; i < letters.length; i++) {
+            if(isFind) break;
+            dfs(`${word}${letters[i]}`);
         }
     };
     
     dfs('');
-
-    return count;
+    
+    return answer;
 }
