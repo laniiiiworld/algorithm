@@ -11,9 +11,13 @@ function solution(bridge_length, weight, truck_weights) {
             const truck = bridge.shift();
             nowWeight -= truck.weight;
         }
-        
         if(bridge.length === bridge_length) continue;
-        if(nowWeight + truck_weights[nextIndex] > weight) continue;
+        while(nowWeight + truck_weights[nextIndex] > weight) {
+            const truck = bridge.shift();
+            nowWeight -= truck.weight;
+            answer += truck.time;
+            bridge.forEach(car => car.time -= truck.time);
+        }
         
         const truck = {weight: truck_weights[nextIndex++], time: bridge_length};
         bridge.push(truck);
