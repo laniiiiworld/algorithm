@@ -17,36 +17,34 @@ class Queue {
         return value;
     }
 }
-
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 const [n, k, m] = input[0].split(' ').map(Number);
-const visited = new Set();
 const graph = Array.from({length: n + m + 1}, () => []);
-for(let i = 1; i <= m; i++) {
-    const arr = input[i].split(' ').map(Number);
-    for(const a of arr) {
-        graph[a].push(n + i);
-        graph[n + i].push(a);
+for(let tube = 1; tube <= m; tube++) {
+    const connected = input[tube].split(' ').map(Number);
+    for(const station of connected) {
+        graph[n + tube].push(station);
+        graph[station].push(n + tube);
     }
 }
 
 let answer = n + m + 1;
+const visited = new Set();
 const queue = new Queue();
 queue.enqueue([1, 1]);
+visited.add(1);
 
 while(queue.size()) {
-    const [start, distance] = queue.dequeue();
+    const [start, count] = queue.dequeue();
     
-    if(visited.has(start)) continue;
     if(start === n) {
-        answer = distance;
-        break;
+        answer = Math.min(answer, count);
     }
-    visited.add(start);
     
     for(const end of graph[start]) {
         if(visited.has(end)) continue;
-        queue.enqueue([end, distance + 1]);
+        visited.add(end);
+        queue.enqueue([end, count + 1]);
     }
 }
 
