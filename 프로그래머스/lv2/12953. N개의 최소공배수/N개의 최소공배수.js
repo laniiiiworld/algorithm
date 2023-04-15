@@ -5,10 +5,6 @@ function solution(arr) {
         }
         return ab / b;
     };
-    let lcm = arr[0];
-    for(let i = 1; i < arr.length; i++) {
-        lcm = getLCM(lcm, arr[i]);
-    }
     
-    return lcm;
+    return arr.reduce((acc, cur) => acc = getLCM(acc, cur));
 }
