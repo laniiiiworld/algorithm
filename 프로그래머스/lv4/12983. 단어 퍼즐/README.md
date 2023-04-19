@@ -1,10 +1,10 @@
 # [level 4] 단어 퍼즐 - 12983 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12983) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12983?language=javascript) 
 
 ### 성능 요약
 
-메모리: 38.1 MB, 시간: 23.49 ms
+메모리: 38 MB, 시간: 26.27 ms
 
 ### 구분
 
@@ -12,7 +12,7 @@
 
 ### 채점결과
 
-<br/>정확성: 59.4<br/>효율성: 40.6<br/>합계: 100.0 / 100.0
+Empty
 
 ### 문제 설명
 
