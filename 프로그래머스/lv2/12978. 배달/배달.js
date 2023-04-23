@@ -1,29 +1,21 @@
 function solution(N, road, K) {
-    const distance = Array.from({length: N+1}, () => Array(N+1).fill(Infinity));
+    const distance = Array.from({length: N}, (_, idx) => {
+        return Array.from({length: N}, (v, i) => i === idx? 0 : Infinity);
+    });
 
-    //각 간선에 대한 정보 초기화
-    for(const [start, end, cost] of road) {
-        const minCost = Math.min(distance[start][end], cost);
-        distance[start][end] = minCost;
-        distance[end][start] = minCost;
-    }
+    road.forEach(([a,b,c]) => {
+        distance[a - 1][b - 1] = Math.min(distance[a - 1][b - 1], c);
+        distance[b - 1][a - 1] = Math.min(distance[b - 1][a - 1], c);
+    });
     
-    //플로이드 워셜 알고리즘
-    // start: 출발하는 마을
-    // mid: 거쳐가는 마을
-    // end: 도착하는 마을
-    for(let mid=1; mid<=N; mid++) {
-        for(let start=1; start<=N; start++) {
-            for(let end=1; end<=N; end++) {
-                if(start === end) {
-                    distance[start][end] = 0;
-                    continue;
-                }
-                const calcDistance = distance[start][mid] + distance[mid][end];
-                distance[start][end] = Math.min(distance[start][end], calcDistance);
+    for(let k=0; k<N; k++) {
+        for(let a=0; a<N; a++) {
+            for(let b=0; b<N; b++) {
+                const calcDistance = distance[a][k] + distance[k][b];
+                distance[a][b] = Math.min(distance[a][b], calcDistance);
             }
         }
     }
     
-    return distance[1].filter(value => value <= K).length;
+    return distance[0].filter(value => value <= K).length;
 }
