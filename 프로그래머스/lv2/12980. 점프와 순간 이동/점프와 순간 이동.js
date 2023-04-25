@@ -1,10 +1,3 @@
 function solution(n) {
-    let answer = 0;
-    
-    while(n > 0) {
-        answer += (n % 2);
-        n = ~~(n / 2);
-    }
-    
-    return answer;
+    return n.toString(2).replace(/0/g,'').length;
 }
