@@ -1,22 +1,25 @@
 function solution(msg) {
     const answer = [];
-    const codeA = 'A'.charCodeAt(0);
-    const dictionary = Array.from({length:26}, (_,i) => String.fromCodePoint(i+codeA));
+    const table = new Array(26).fill(0).map((v,i) => String.fromCodePoint(i+65));
     const LZW = (now, index) => {
         const next = msg[index];
-        if( dictionary.indexOf(now+next) > -1) {
-            return LZW(now+next, index+1);
+        const tableIndex = table.indexOf(now+next);
+        if( tableIndex === -1) {
+            answer.push(table.indexOf(now)+1);
+            table.push(now+next);
+        } else {
+            index = LZW(now+next, index+1);
         }
-        
-        answer.push(dictionary.indexOf(now)+1);
-        if(next) dictionary.push(now+next);
-
         return index;
     };
 
     let i = 0;
-    while(i < msg.length) {
-        i = LZW(msg.charAt(i), i+1);
+    while(i < msg.length-1) {
+        i = LZW(msg[i], i+1);
+    }
+
+    if(i < msg.length){
+        answer.push(table.indexOf(msg[i])+1);
     }
 
     return answer;
