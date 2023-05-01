@@ -1,11 +1,12 @@
 function solution(n) {
-    let str = n.toString(2);
-    let number = n;
-    const count = str.replaceAll('0','').length;
+    let answer = n;
+    let count = n.toString(2).match(/1/g).length;
+    let result = 0;
     
-    while(number <= n || str.replaceAll('0','').length !== count) {
-        str = (++number).toString(2);
+    while(result !== count) {
+        answer += 1;
+        result = answer.toString(2).match(/1/g).length;
     }
     
-    return number;
+    return answer;
 }
