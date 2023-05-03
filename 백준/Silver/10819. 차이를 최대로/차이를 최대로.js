@@ -1,29 +1,32 @@
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 const n = Number(input[0]);
-const numbers = input[1].split(' ').map(Number);
-let answer = 0;
+const arr = input[1].split(' ').map(Number);
 const visited = Array(n).fill(false);
-const dfs = (current, sum, arr) => {
-    if(arr.length === n) {
-        if(sum > answer) {
-            answer = sum;
-        }
-        return;
+let answer = 0;
+
+const calculateAnswer = (numbers) => {
+    let result = 0;
+    for(let i = 1; i < n; i++) {
+        result += Math.abs(numbers[i] - numbers[i - 1]);
     }
-    
-    visited[current] = true;
-    
-    for(let next=0; next<n; next++) {
-        if(visited[next]) continue;
-        dfs(next, sum + Math.abs(numbers[current] - numbers[next]), [...arr, numbers[next]]);
-    }
-    
-    visited[current] = false;
+    return result;
 };
 
-for(let current=0; current<n; current++) {
-    for(let index in visited) visited[index] = false;
-    dfs(current, 0, [numbers[current]]);
-}
+const dfs = (numbers) => {
+    if(numbers.length === n) {
+        answer = Math.max(answer, calculateAnswer(numbers));
+        return;
+    }
+    for(let i = 0; i < n; i++) {
+        if(visited[i]) continue;
+        visited[i] = true;
+        numbers.push(arr[i]);
+        dfs(numbers);
+        numbers.pop();
+        visited[i] = false;
+    }
+};
+
+dfs([]);
 
 console.log(answer);
