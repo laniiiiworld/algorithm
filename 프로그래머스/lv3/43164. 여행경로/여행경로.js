@@ -1,24 +1,22 @@
 function solution(tickets) {
-    const answer = [];
-    const cities = new Map();
-    const dfs = (start) => {
-        const destinations = cities.get(start) || [];
+    let answer = [];
+    const graph = new Map();
+    const dfs = (now) => {
+        const destinations = graph.get(now) || [];
         while(destinations.length) {
-            const end = destinations.shift();
-            cities.set(start, destinations);
-            dfs(end);
+            dfs(destinations.shift());
         }
-        answer.push(start);
+        answer.push(now);
     };
     
     for(const [start, end] of tickets) {
-        const destinations = cities.get(start) || [];
-        cities.set(start, [...destinations, end]);
+        const destinations = graph.get(start) || [];
+        graph.set(start, [...destinations, end]);
     }
     
-    for(const start of cities.keys()) {
-        const destinations = cities.get(start);
-        cities.set(start, destinations.sort());
+    for(const start of graph.keys()) {
+        const destinations = graph.get(start) || [];
+        graph.set(start, destinations.sort());
     }
     
     dfs('ICN');
