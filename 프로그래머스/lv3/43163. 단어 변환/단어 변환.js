@@ -1,23 +1,22 @@
 function solution(begin, target, words) {
-    let answer = 0;
-    const n = words.length;
-    const visited = Array(n).fill(false);
-    const isChange = (a, b) => {
+    let answer = words.length + 1;
+    const visited = Array(words.length).fill(false);
+    const isChange = (before, after) => {
         let count = 0;
-        for(let i = 0; i < n; i++) {
-            if(a[i] === b[i]) continue;
-            count += 1;
+        for(let i = 0; i < before.length; i++) {
+            if(before[i] !== after[i]) count += 1;
         }
         return count === 1;
     };
-    const dfs = (word, count) => {
-        if(word === target) {
-            answer = count;
+    const dfs = (before, count) => {
+        if(before === target) {
+            answer = Math.min(answer, count);
             return;
         }
-        for(let i = 0; i < n; i++) {
+        
+        for(let i = 0; i < words.length; i++) {
             if(visited[i]) continue;
-            if(!isChange(word, words[i])) continue;
+            if(!isChange(before, words[i])) continue;
             visited[i] = true;
             dfs(words[i], count + 1);
             visited[i] = false;
@@ -28,5 +27,5 @@ function solution(begin, target, words) {
     
     dfs(begin, 0);
     
-    return answer;
+    return answer === words.length + 1 ? 0 : answer;
 }
