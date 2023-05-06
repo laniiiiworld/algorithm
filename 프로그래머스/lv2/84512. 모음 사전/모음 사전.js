@@ -1,23 +1,25 @@
-function solution(target) {
-    let answer = -1;
+function solution(word) {
+    let answer = 0;
     let isFind = false;
-    const letters = ['A', 'E', 'I', 'O', 'U'];
-    const dfs = (word) => {
-        answer += 1;
-        
-        if(word === target) {
+    const baseLetters = ['A', 'E', 'I', 'O', 'U'];
+    const visited = Array(5).fill(false);
+    const dfs = (text) => {
+        if(text === word) {
             isFind = true;
             return;
         }
-        if(word.length === 5) return;
+        if(text.length === 5) {
+            return;
+        }
         
-        for(let i = 0; i < letters.length; i++) {
+        for(let i = 0; i < baseLetters.length; i++) {
             if(isFind) break;
-            dfs(`${word}${letters[i]}`);
+            answer += 1;
+            dfs(`${text}${baseLetters[i]}`);
         }
     };
     
-    dfs('');
+    dfs('', 0);
     
     return answer;
 }
