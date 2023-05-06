@@ -1,21 +1,26 @@
 function solution(numbers) {
     const answer = new Set();
-    const visited = Array(numbers.length).fill(false);
-    const isFrime = (number) => {
-        if(number < 2) return false;
-        for(let i = 2; i * i <= number; i++) {
-            if(number % i === 0) return false;
+    const n = numbers.length;
+    const visited = Array(n).fill(false);
+    const graph = numbers.split('');
+    const isPrime = (a) => {
+        if(a < 2) return false;
+        for(let i = 2; i * i <= a; i++) {
+            if(a % i === 0) return false;
         }
+        
         return true;
     };
-    const dfs = (makedNumber) => {
-        if(isFrime(Number(makedNumber))) answer.add(Number(makedNumber));
-        if(makedNumber.length === numbers.length) return;
+    const dfs = (text) => {
+        if(isPrime(Number(text))) {
+            answer.add(Number(text));
+        }
+        if(text.length === n) return;
         
-        for(let i = 0; i < numbers.length; i++) {
+        for(let i = 0; i < n; i++) {
             if(visited[i]) continue;
             visited[i] = true;
-            dfs(`${makedNumber}${numbers[i]}`);
+            dfs(text + graph[i]);
             visited[i] = false;
         }
     };
