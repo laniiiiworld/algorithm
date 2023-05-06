@@ -23,25 +23,35 @@ function solution(maps) {
     const m = maps[0].length;
     const distance = [[1, 0], [-1, 0], [0, 1], [0, -1]];
     const visited = Array.from({length: n}, () => Array(m).fill(false));
-    const bfs = (x, y, count) => {
-        let result = count + Number(maps[y][x]);
-        visited[y][x] = true;
+    const bfs = (row, col) => {
+        let result = 0;
+        const queue = new Queue();
         
-        for(const [plusX, plusY] of distance) {
-            const nextX = x + plusX;
-            const nextY = y + plusY;
-            if(nextX < 0 || nextY < 0 || nextX === m || nextY === n) continue;
-            if(maps[nextY][nextX] === 'X' || visited[nextY][nextX]) continue;
-            result = Math.max(result, bfs(nextX, nextY, result));
+        queue.enqueue([col, row]);
+        visited[row][col] = true;
+        
+        while(queue.size()) {
+            const [x, y] = queue.dequeue();
+            
+            result += Number(maps[y][x]);
+            
+            for(const [plusX, plusY] of distance) {
+                const nextX = x + plusX;
+                const nextY = y + plusY;
+                if(nextX < 0 || nextY < 0 || nextX === m || nextY === n) continue;
+                if(maps[nextY][nextX] === 'X' || visited[nextY][nextX]) continue;
+                
+                visited[nextY][nextX] = true;
+                queue.enqueue([nextX, nextY]);
+            }
         }
-        
         return result;
     };
     
     for(let i = 0; i < n; i++) {
         for(let j = 0; j < m; j++) {
             if(maps[i][j] === 'X' || visited[i][j]) continue;
-            answer.push(bfs(j, i, 0));
+            answer.push(bfs(i, j));
         }
     }
     
