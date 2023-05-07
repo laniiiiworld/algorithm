@@ -21,23 +21,25 @@ class Queue {
 function solution(n, computers) {
     let answer = 0;
     const visited = Array(n).fill(false);
-    const queue = new Queue();
-    const bfs = () => {
+    const bfs = (computer) => {
+        const queue = new Queue();
+        queue.enqueue(computer);
+        visited[computer] = true;
+        
         while(queue.size()) {
-            const start = queue.dequeue();
-
+            const now = queue.dequeue();
+            
             for(let i = 0; i < n; i++) {
-                if(visited[i] || computers[start][i] === 0) continue;
+                if(computers[now][i] === 0 || visited[i]) continue;
+                visited[now] = true;
                 queue.enqueue(i);
-                visited[i] = true;
             }
         }
     };
+    
     for(let i = 0; i < n; i++) {
         if(visited[i]) continue;
-        queue.enqueue(i);
-        visited[i] = true;
-        bfs(queue);
+        bfs(i);
         answer += 1;
     }
     
