@@ -19,9 +19,9 @@ class Queue {
 }
 
 function solution(maps) {
-    const n = maps.length;
-    const m = maps[0].length;
-    let answer = n * m + 1;
+    const n = maps.length - 1;
+    const m = maps[0].length - 1;
+    const distance = [[1, 0], [-1, 0], [0, 1], [0, -1]];
     
     const queue = new Queue();
     queue.enqueue([0, 0, 1]);
@@ -30,20 +30,21 @@ function solution(maps) {
     while(queue.size()) {
         const [y, x, count] = queue.dequeue();
         
-        if(y === n - 1 && x === m - 1) {
-            answer = Math.min(answer, count);
-            continue;
+        if(y === n && x === m) {
+            return count;
         }
         
-        for(const [plusY, plusX] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        for(const [plusY, plusX] of distance) {
             const nextY = y + plusY;
             const nextX = x + plusX;
-            if(nextY < 0 || nextX < 0 || nextY === n || nextX === m) continue;
+            
+            if(nextX < 0 || nextY < 0 || nextX > m || nextY > n) continue;
             if(maps[nextY][nextX] === 0) continue;
+            
             maps[nextY][nextX] = 0;
             queue.enqueue([nextY, nextX, count + 1]);
         }
     }
     
-    return answer === n * m + 1 ? -1 : answer;
+    return -1;
 }
