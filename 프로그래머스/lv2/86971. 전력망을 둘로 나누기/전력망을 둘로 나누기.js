@@ -20,29 +20,22 @@ class Queue {
 
 function solution(n, wires) {
     let answer = n;
-    const bfs = (start, wires) => {
+    const bfs = (graph) => {
         let result = 0;
         const visited = Array(n + 1).fill(false);
-        const graph = Array.from({length: n + 1}, () => []);
-        for(const [v1, v2] of wires) {
-            graph[v1].push(v2);
-            graph[v2].push(v1);
-        }
-        
         const queue = new Queue();
-        queue.enqueue(start);
+        queue.enqueue(1);
+        visited[1] = true;
         
         while(queue.size()) {
             const now = queue.dequeue();
             
-            if(visited[now]) continue;
-            visited[now] = true;
-            
             result += 1;
             
-            for(const end of graph[now]) {
-                if(visited[end]) continue;
-                queue.enqueue(end);
+            for(const next of graph[now]) {
+                if(visited[next]) continue;
+                visited[next] = true;
+                queue.enqueue(next);
             }
         }
         
@@ -50,10 +43,14 @@ function solution(n, wires) {
     };
     
     for(let i = 0; i < wires.length; i++) {
-        const newWires = [...wires.slice(0, i), ...wires.slice(i + 1)];
-        const count = bfs(1, newWires);
-        const gap = Math.abs(count - (n - count));
-        answer = Math.min(answer, gap);
+        const copiedWires = [...wires.slice(0, i), ...wires.slice(i + 1)];
+        const graph = Array.from({length: n + 1}, () => []);
+        for(const [start, end] of copiedWires) {
+            graph[start].push(end);
+            graph[end].push(start);
+        }
+        const count = bfs(graph);
+        answer = Math.min(answer, Math.abs((n - count) - count));
     }
     
     return answer;
