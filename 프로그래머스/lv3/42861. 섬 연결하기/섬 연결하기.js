@@ -1,33 +1,94 @@
-function solution(n, costs) {
-  const costsVisited = new Array(costs.length).fill(false); //costs[i] 확인 여부
-  costs.sort((a, b) => a[2] - b[2]); //비용이 적은 순서대로 정렬
-
-  //가장 비용이 적은 곳부터 방문 처리
-  const visited = new Array(n).fill(false); //노드 방문 여부
-  visited[costs[0][0]] = true;
-  visited[costs[0][1]] = true;
-  costsVisited[0] = true; //costs[i] 확인 처리
-
-  let totalCost = costs[0][2]; //모든 섬이 서로 통행 가능하도록 만들 때 필요한 최소 비용
-
-  //모든 노드가 연결되는 시점까지 확인
-  while (visited.includes(false)) {
-    for (let i = 1; i < costs.length; i++) {
-      if (costsVisited[i]) continue; //확인되지 않은 costs[i]만 다리 연결 가능여부 확인
-      const [start, end, cost] = costs[i];
-      //다리를 연결할 수 있는 경우(= 둘 중 한 노드가 아직 방문처리 되지 않은 경우)
-      if ((!visited[start] && visited[end]) || (visited[start] && !visited[end])) {
-        //노드 방문 처리
-        visited[start] = true;
-        visited[end] = true;
-        //비용 추가
-        totalCost += cost;
-        //costs[i] 확인 처리
-        costsVisited[i] = true;
-        break;
-      }
+class MinHeap {
+    constructor() {
+        this.heap = [null];
     }
-  }
+    size() {
+        return this.heap.length - 1;
+    }
+    push(item) {
+        this.heap.push(item);
+        
+        let currentIndex = this.heap.length - 1;
+        let parentIndex = ~~(currentIndex / 2);
+        
+        while(parentIndex >= 1 && this.heap[currentIndex][2] < this.heap[parentIndex][2]) {
+            this._swap(currentIndex, parentIndex);
+            currentIndex = parentIndex;
+            parentIndex = ~~(currentIndex / 2);
+        }
+    }
+    pop() {
+        if(this.heap.length === 2) return this.heap.pop();
+        
+        const returnItem = this.heap[1];
+        this.heap[1] = this.heap.pop();
+        
+        let currentIndex = 1;
+        let leftIndex = 2;
+        let rightIndex = 3;
+        
+        if(!this.heap[leftIndex]) {
+            return returnItem;
+        } else if(!this.heap[rightIndex]) {
+            if(this.heap[leftIndex][2] < this.heap[currentIndex][2]) {
+                this._swap(leftIndex, currentIndex);
+            }
+            return returnItem;
+        }
+        
+        while(
+              (this.heap[leftIndex][2] < this.heap[currentIndex][2]) ||
+              (this.heap[rightIndex][2] < this.heap[currentIndex][2])
+             ) {
+            const minIndex = this.heap[leftIndex][2] <= this.heap[rightIndex][2]? leftIndex : rightIndex;
+            this._swap(minIndex, currentIndex);
+            
+            currentIndex = minIndex;
+            leftIndex = currentIndex * 2;
+            rightIndex = currentIndex * 2 + 1;
+            if(leftIndex >= this.heap.length - 1) break;
+        }
+        
+        return returnItem;
+    }
+    _swap(a, b) {
+        [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
+    }
+}
 
-  return totalCost;
+function solution(n, costs) {
+    let answer = 0;
+    const visited = new Array(n).fill(false);
+    const heap = new MinHeap();    
+    for(const [a, b, cost] of costs) {
+        heap.push([a, b, cost]);
+    }
+    
+    const [a, b, cost] = heap.pop();
+    visited[a] = true;
+    visited[b] = true;
+    answer += cost;
+    
+    while(visited.includes(false)) {
+        const stack = [];
+        while(heap.size()) {
+            const [start, end, cost] = heap.pop();
+
+            if((!visited[start] && visited[end]) || (visited[start] && !visited[end])) {
+                visited[start] = true;
+                visited[end] = true;
+
+                answer += cost;
+                break;
+            } else {
+                stack.push([start, end, cost]);
+            }
+        }
+        
+        while(stack.length) {
+            heap.push(stack.pop());
+        }
+    }
+    
+    return answer;
 }
