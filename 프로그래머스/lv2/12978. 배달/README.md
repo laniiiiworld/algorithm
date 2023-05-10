@@ -1,10 +1,10 @@
 # [level 2] 배달 - 12978 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12978?language=javascript) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12978#qna) 
 
 ### 성능 요약
 
-메모리: 37.2 MB, 시간: 6.42 ms
+메모리: 34 MB, 시간: 1.53 ms
 
 ### 구분
 
