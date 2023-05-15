@@ -1,11 +1,5 @@
 function solution(m, musicinfos) {
-    const getNewMelody = (melody) => {
-        return melody.replaceAll('C#', 'c')
-                     .replaceAll('D#', 'd')
-                     .replaceAll('F#', 'f')
-                     .replaceAll('G#', 'g')
-                     .replaceAll('A#', 'a');
-    };
+    const getNewMelody = (melody) => melody.replace(/[A-G]#/g, (m) => m[0].toLowerCase());
     
     m = getNewMelody(m);
     
