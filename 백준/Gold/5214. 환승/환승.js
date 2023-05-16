@@ -17,35 +17,38 @@ class Queue {
         return value;
     }
 }
+
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 const [n, k, m] = input[0].split(' ').map(Number);
 const graph = Array.from({length: n + m + 1}, () => []);
-for(let tube = 1; tube <= m; tube++) {
-    const connected = input[tube].split(' ').map(Number);
+for(let i = 1; i <= m; i++) {
+    const connected = input[i].split(' ').map(Number);
     for(const station of connected) {
-        graph[n + tube].push(station);
-        graph[station].push(n + tube);
+        graph[station].push(n + i);
     }
+    graph[n + i] = connected;
 }
 
-let answer = n + m + 1;
+let answer = -1;
 const visited = new Set();
 const queue = new Queue();
+
 queue.enqueue([1, 1]);
 visited.add(1);
 
 while(queue.size()) {
-    const [start, count] = queue.dequeue();
+    const [now, count] = queue.dequeue();
     
-    if(start === n) {
-        answer = Math.min(answer, count);
+    if(now === n) {
+        answer = Math.ceil(count / 2);
+        break;
     }
     
-    for(const end of graph[start]) {
-        if(visited.has(end)) continue;
-        visited.add(end);
-        queue.enqueue([end, count + 1]);
+    for(const next of graph[now]) {
+        if(visited.has(next)) continue;
+        queue.enqueue([next, count + 1]);
+        visited.add(next);
     }
 }
 
-console.log(answer === n + m + 1? -1 : Math.ceil(answer / 2));
+console.log(answer);
