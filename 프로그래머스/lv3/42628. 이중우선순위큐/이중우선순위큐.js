@@ -2,35 +2,26 @@ class MinHeap {
     constructor() {
         this.heap = [null];
     }
-    isEmpty() {
-        return this.heap.length === 1;
+    peek() {
+        return this.heap[1] || [null, null];
+    }
+    size() {
+        return this.heap.length - 1;
     }
     push(value) {
-        this.heap.push(parseInt(value));
-        let currentIndex = this.heap.length - 1;
-        let parentIndex = Math.floor(currentIndex/2);
+        this.heap.push(value);
         
-        while(parentIndex !== 0 && this.heap[parentIndex] > value) {
+        let currentIndex = this.heap.length - 1;
+        let parentIndex = ~~(currentIndex / 2);
+        
+        while(parentIndex >= 1 && (this.heap[currentIndex][0] < this.heap[parentIndex][0])) {
             this._swap(currentIndex, parentIndex);
             currentIndex = parentIndex;
-            parentIndex = Math.floor(currentIndex/2);
+            parentIndex = ~~(currentIndex / 2);
         }
     }
-    pop(deletedItems) {
-        this._removeAlreadyPopedItems(deletedItems);
-        return this._removeItem();
-    }
-    peek(deletedItems) {
-        this._removeAlreadyPopedItems(deletedItems);
-        return this.heap[1];
-    }    
-    _swap(a, b) {
-        [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
-    }
-    _removeItem() {
-        if(this.isEmpty()) return null;
-        if(this.heap.length === 2) return this.heap.pop();
-        
+    pop() {
+        if(this.size() === 1) return this.heap.pop();
         const returnValue = this.heap[1];
         this.heap[1] = this.heap.pop();
         
@@ -38,16 +29,18 @@ class MinHeap {
         let leftIndex = 2;
         let rightIndex = 3;
         
-        if(!this.heap[leftIndex]) return returnValue;
-        if(!this.heap[rightIndex]) {
-            if(this.heap[leftIndex] < this.heap[currentIndex]) {
+        if(this.size() === 1) {
+            return returnValue;
+        } else if(this.size() === 2) {
+            if(this.heap[leftIndex][0] < this.heap[currentIndex][0]) {
                 this._swap(leftIndex, currentIndex);
             }
             return returnValue;
         }
-        while((this.heap[leftIndex] < this.heap[currentIndex]) ||
-              (this.heap[rightIndex] < this.heap[currentIndex])) {
-            const minIndex = (this.heap[leftIndex] < this.heap[rightIndex]) ? leftIndex : rightIndex;
+        
+        while((this.heap[leftIndex][0] < this.heap[currentIndex][0]) || 
+              (this.heap[rightIndex][0] < this.heap[currentIndex][0])) {
+            const minIndex = (this.heap[leftIndex][0] <= this.heap[rightIndex][0])? leftIndex : rightIndex;
             this._swap(minIndex, currentIndex);
             currentIndex = minIndex;
             leftIndex = currentIndex * 2;
@@ -57,50 +50,34 @@ class MinHeap {
         
         return returnValue;
     }
-    _removeAlreadyPopedItems(deletedItems) {
-        while(deletedItems.has(`MAX${this.heap[1]}`)) {
-            const deletedItem = `MAX${this.heap[1]}`;
-            const itemCount = deletedItems.get(deletedItem);
-            if(itemCount - 1 === 0) {
-                deletedItems.delete(deletedItem);
-            } else {
-                deletedItems.set(deletedItem, itemCount - 1);
-            }
-            this._removeItem();
-        }
+    _swap(a, b) {
+        [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
     }
 }
-
 class MaxHeap {
     constructor() {
         this.heap = [null];
     }
-    isEmpty() {
-        return this.heap.length === 1;
+    peek() {
+        return this.heap[1] || [null, null];
+    }
+    size() {
+        return this.heap.length - 1;
     }
     push(value) {
-        this.heap.push(parseInt(value));
-        let currentIndex = this.heap.length - 1;
-        let parentIndex = Math.floor(currentIndex/2);
+        this.heap.push(value);
         
-        while(parentIndex !== 0 && this.heap[parentIndex] < value) {
+        let currentIndex = this.heap.length - 1;
+        let parentIndex = ~~(currentIndex / 2);
+        
+        while(parentIndex >= 1 && (this.heap[currentIndex][0] > this.heap[parentIndex][0])) {
             this._swap(currentIndex, parentIndex);
             currentIndex = parentIndex;
-            parentIndex = Math.floor(currentIndex/2);
+            parentIndex = ~~(currentIndex / 2);
         }
     }
-    pop(deletedItems) {
-        this._removeAlreadyPopedItems(deletedItems);
-        return this._removeItem();
-    }
-    peek(deletedItems) {
-        this._removeAlreadyPopedItems(deletedItems);
-        return this.heap[1];
-    }    
-    _removeItem() {
-        if(this.isEmpty()) return null;
-        if(this.heap.length === 2) return this.heap.pop();
-        
+    pop() {
+        if(this.size() === 1) return this.heap.pop();
         const returnValue = this.heap[1];
         this.heap[1] = this.heap.pop();
         
@@ -108,21 +85,20 @@ class MaxHeap {
         let leftIndex = 2;
         let rightIndex = 3;
         
-        if(!this.heap[leftIndex]) return returnValue;
-        if(!this.heap[rightIndex]) {
-            if(this.heap[leftIndex] > this.heap[currentIndex]) {
+        if(this.size() === 1) {
+            return returnValue;
+        } else if(this.size() === 2) {
+            if(this.heap[leftIndex][0] > this.heap[currentIndex][0]) {
                 this._swap(leftIndex, currentIndex);
             }
             return returnValue;
         }
         
-        while(
-              (this.heap[currentIndex] < this.heap[leftIndex]) || 
-              (this.heap[currentIndex] < this.heap[rightIndex])
-             ) {
-            const minIndex = (this.heap[leftIndex] > this.heap[rightIndex]) ? leftIndex : rightIndex;
-            this._swap(minIndex, currentIndex);
-            currentIndex = minIndex;
+        while((this.heap[leftIndex][0] > this.heap[currentIndex][0]) || 
+              (this.heap[rightIndex][0] > this.heap[currentIndex][0])) {
+            const maxIndex = (this.heap[leftIndex][0] >= this.heap[rightIndex][0])? leftIndex : rightIndex;
+            this._swap(maxIndex, currentIndex);
+            currentIndex = maxIndex;
             leftIndex = currentIndex * 2;
             rightIndex = currentIndex * 2 + 1;
             if(leftIndex >= this.heap.length - 1) break;
@@ -130,52 +106,58 @@ class MaxHeap {
         
         return returnValue;
     }
-    _removeAlreadyPopedItems(deletedItems) {
-        while(deletedItems.has(`MIN${this.heap[1]}`)) {
-            const deletedItem = `MIN${this.heap[1]}`;
-            const itemCount = deletedItems.get(deletedItem);
-            
-            if(itemCount - 1 === 0) {
-                deletedItems.delete(deletedItem);
-            } else {
-                deletedItems.set(deletedItem, itemCount - 1);
-            }
-            this._removeItem();
-        }
-    }
     _swap(a, b) {
         [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
     }
 }
-
 function solution(operations) {
-    const minHeap = new MinHeap();
-    const maxHeap = new MaxHeap();
-    const deletedNumbers = new Map();
     let count = 0;
+    const visited = new Set();
+    const maxHeap = new MaxHeap();
+    const minHeap = new MinHeap();
+    const deleteValue = (heap, type, checked) => {
+        while(heap.size()) {
+            const [value, index] = heap.peek();
+            if(!visited.has(`${index}${checked}${value}`)) break;
+            heap.pop();
+        }
+        
+        if(heap.size() === 0) return;
+        
+        const [value, index] = heap.pop();
+        visited.add(`${index}${type}${value}`);
+        count -= 1;
+    };
+    const peekValue = (heap, type, checked) => {
+        while(heap.size()) {
+            const [value, index] = heap.peek();
+            if(!visited.has(`${index}${checked}${value}`)) break;
+            heap.pop();
+        }
+        
+        if(heap.size() === 0) return 0;
+        
+        return heap.peek()[0];
+    };
     
-    for(const operation of operations) {
-        const [code, number] = operation.split(' ');
-        if(code === 'I') {
+    for(let i = 0; i < operations.length; i++) {
+        const [operation, value] = operations[i].split(' ');
+        if(operation === 'I') {
             count += 1;
-            minHeap.push(parseInt(number));
-            maxHeap.push(parseInt(number));
+            maxHeap.push([Number(value), i]);
+            minHeap.push([Number(value), i]);
         } else {
-            count -= count? 1 : 0;
-            let removedNumber = null;
-            if(number === '1') {
-                removedNumber = maxHeap.pop(deletedNumbers);
+            if(value === '1') {
+                deleteValue(maxHeap, 'MAX', 'MIN');
             } else {
-                removedNumber = minHeap.pop(deletedNumbers);
-            }
-            if(removedNumber) {
-                const key = (number === '1')? `MAX${removedNumber}` : `MIN${removedNumber}`;
-                const value = deletedNumbers.get(key) || 0;
-                deletedNumbers.set(key, value + 1)
+                deleteValue(minHeap, 'MIN', 'MAX');
             }
         }
     }
-    const maxNumber = maxHeap.pop(deletedNumbers);
-    const minNumber = minHeap.pop(deletedNumbers);
-    return count? [maxNumber, minNumber] : [0, 0];
+    
+    const max = peekValue(maxHeap, 'MAX', 'MIN');
+    const min = peekValue(minHeap, 'MIN', 'MAX');
+    if(count === 0) return [0, 0];
+    if(count === 1) return [Math.max(max, min), Math.max(max, min)];
+    return [max, min];
 }
