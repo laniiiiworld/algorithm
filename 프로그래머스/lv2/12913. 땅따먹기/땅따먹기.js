@@ -1,13 +1,11 @@
 function solution(land) {
     for(let i = 1; i < land.length; i++) {
-        const row = [0, 0, 0, 0];
-        for(let j = 0; j < 4; j++) {
-            for(let k = 0; k < 4; k++) {
-                if(j === k) continue;
-                row[j] = Math.max(row[j], land[i - 1][k] + land[i][j]);
-            }
-        }
-        land[i] = row;
+        const [a, b, c, d] = land[i - 1];
+        
+        land[i][0] += Math.max(b, c, d);
+        land[i][1] += Math.max(a, c, d);
+        land[i][2] += Math.max(a, b, d);
+        land[i][3] += Math.max(a, b, c);
     }
     
     return Math.max(...land[land.length - 1]);
