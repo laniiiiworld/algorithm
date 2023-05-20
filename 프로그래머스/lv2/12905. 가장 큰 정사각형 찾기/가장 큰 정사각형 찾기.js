@@ -2,16 +2,13 @@ function solution(board) {
     const n = board.length;
     const m = board[0].length;
     
-    if(n === 1 || m === 1) return Math.max(...board.flat());
-    
-    let max = 0;
-    for(let y = 1; y < n; y++) {
-        for(let x = 1; x < m; x++) {
-            if(!board[y][x]) continue;
-            board[y][x] = Math.min(board[y - 1][x - 1], board[y - 1][x], board[y][x - 1]) + 1;
+    for(let i = 1; i < n; i++) {
+        for(let j = 1; j < m; j++) {
+            if(!board[i - 1][j - 1] || !board[i - 1][j] || !board[i][j - 1] || !board[i][j]) continue;
+            board[i][j] = Math.min(board[i - 1][j - 1], board[i - 1][j], board[i][j - 1]) + 1;
         }
-        max = Math.max(max, ...board[y]);
     }
     
-    return max * max;
+    const value = board.reduce((acc, row) => acc = Math.max(acc, ...row), 0);
+    return value * value;
 }
