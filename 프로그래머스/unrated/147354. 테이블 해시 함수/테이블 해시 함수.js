@@ -1,10 +1,7 @@
 function solution(data, col, row_begin, row_end) {
-    data.sort((a, b) => a[col - 1] - b[col - 1] || b[0] - a[0]);
-    
-    let sum = 0;
-    for(let i = row_begin; i <= row_end; i++) {
-        sum ^= data[i - 1].reduce((acc, cur) => acc += cur % i, 0);
-    }
-    
-    return sum;
+    return data
+            .sort((a, b) => a[col - 1] - b[col - 1] || b[0] - a[0])
+            .slice(row_begin - 1, row_end)
+            .map((row, index) => row.reduce((acc, cur) => acc += cur % (index + row_begin), 0))
+            .reduce((acc, cur) => acc ^= cur, 0);
 }
