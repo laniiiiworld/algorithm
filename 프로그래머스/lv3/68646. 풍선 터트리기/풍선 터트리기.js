@@ -1,25 +1,22 @@
 function solution(a) {
-    const visited = new Set();
-    const stack = [Infinity, ...a].sort((a, b) => b - a);
-    const getMinValue = () => {
-        while(visited.has(stack[stack.length - 1])) {
-            stack.pop();
-        }
-        return stack[stack.length - 1];
-    };
+    const remained = new Set();
+    let [leftIndex, rightIndex] = [0, a.length - 1];
+    let [leftMinValue, rightMinValue]  = [Infinity, Infinity];
 
-    let answer = 0;
-    let leftMin = a[0];
-    
-    visited.add(a[0]);
-
-    for(let i = 1; i < a.length; i++) {
-        visited.add(a[i]);
-        if(leftMin < a[i] && a[i] > getMinValue(i)) {
-            answer += 1;
+    for(let i = 0; i < a.length; i++) {
+        if(leftMinValue > a[leftIndex]) {
+            leftMinValue = a[leftIndex];
+            remained.add(a[leftIndex]);
         }
-        leftMin = leftMin < a[i]? leftMin : a[i];
+
+        if(rightMinValue > a[rightIndex]) {
+            rightMinValue = a[rightIndex];
+            remained.add(a[rightIndex]);
+        }
+
+        leftIndex++;
+        rightIndex--;
     }
     
-    return a.length - answer;
+    return remained.size;
 }
