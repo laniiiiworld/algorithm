@@ -1,10 +1,10 @@
 # [unrated] 부대복귀 - 132266 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/132266) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/132266#qna) 
 
 ### 성능 요약
 
-메모리: 86.8 MB, 시간: 96.82 ms
+메모리: 98.8 MB, 시간: 202.47 ms
 
 ### 구분
 
