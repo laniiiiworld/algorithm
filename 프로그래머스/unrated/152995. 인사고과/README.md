@@ -1,10 +1,10 @@
 # [unrated] 인사고과 - 152995 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/152995#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/152995?language=javascript) 
 
 ### 성능 요약
 
-메모리: 54.1 MB, 시간: 4917.56 ms
+메모리: 57.4 MB, 시간: 60.41 ms
 
 ### 구분
 
