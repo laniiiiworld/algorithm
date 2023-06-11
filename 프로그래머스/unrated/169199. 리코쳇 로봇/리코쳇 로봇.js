@@ -23,7 +23,7 @@ function solution(board) {
     const moves = [[0, 1], [-1, 0], [0, -1], [1, 0]];
     const visited = new Set();
     let [startY, startX] = [0, 0];
-    
+
     for(let row = 0; row < n; row++) {
         for(let col = 0; col < m; col++) {
             if(board[row][col] === 'R') {
@@ -40,19 +40,19 @@ function solution(board) {
     const bfs = () => {
         const queue = new Queue();
         queue.enqueue([startY, startX, 0]);
-        
+
         while(queue.size()) {
             const [nowY, nowX, count] = queue.dequeue();
-            
+
             if(board[nowY][nowX] === 'G') {
                 return count;
             }
             visited.add(`${String(nowY).padStart(3, '0')}${String(nowX).padStart(3, '0')}`);
-            
+
             for(const [plusY, plusX] of moves) {
                 let nextY = nowY;
                 let nextX = nowX;
-                
+
                 while(true) {
                     nextY += plusY;
                     nextX += plusX;
@@ -68,9 +68,9 @@ function solution(board) {
                 queue.enqueue([nextY, nextX, count + 1]);
             }
         }
-        
+
         return -1;
     };
-    
+
     return bfs();
 }
