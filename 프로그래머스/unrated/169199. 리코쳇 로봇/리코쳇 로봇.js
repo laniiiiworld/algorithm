@@ -1,76 +1,42 @@
-class Queue {
-    constructor() {
-        this.queue = [];
-        this.front = 0;
-        this.rear = 0;
-    }
-    size() {
-        return this.rear - this.front;
-    }
-    enqueue(value) {
-        this.queue.push(value);
-        this.rear += 1;
-    }
-    dequeue() {
-        const value = this.queue[this.front];
-        delete this.queue[this.front++];
-        return value;
-    }
-}
 function solution(board) {
-    const n = board.length;
-    const m = board[0].length;
-    const moves = [[0, 1], [-1, 0], [0, -1], [1, 0]];
-    const visited = new Set();
-    let [startY, startX] = [0, 0];
+  let start, goal;
 
-    for(let row = 0; row < n; row++) {
-        for(let col = 0; col < m; col++) {
-            if(board[row][col] === 'R') {
-                [startY, startX] = [row, col];
-                break;
-            }
-        }
+  for (let x = 0; x < board.length; x++) {
+    for (let y = 0; y < board[0].length; y++) {
+      if (board[x][y] === 'R') start = [x, y];
+      if (board[x][y] === 'G') goal = [x, y];
     }
-    const isMoved = (nowY, nowX, nextY, nextX) => {
-        if(nowY === nextY && (nextX < 0 || nextX === m)) return true;
-        if(nowX === nextX && (nextY < 0 || nextY === n)) return true;
-        return false;
-    };
-    const bfs = () => {
-        const queue = new Queue();
-        queue.enqueue([startY, startX, 0]);
+  }
 
-        while(queue.size()) {
-            const [nowY, nowX, count] = queue.dequeue();
+  const queue = [[0, ...start]];
+  const visited = Array.from(Array(board.length), () => Array(board[0].length).fill(false));
+  visited[start[0]][start[1]] = true;
 
-            if(board[nowY][nowX] === 'G') {
-                return count;
-            }
-            visited.add(`${String(nowY).padStart(3, '0')}${String(nowX).padStart(3, '0')}`);
+  const move = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
 
-            for(const [plusY, plusX] of moves) {
-                let nextY = nowY;
-                let nextX = nowX;
+  while (queue.length) {
+    const [count, x, y] = queue.shift();
+    if (x === goal[0] && y === goal[1]) return count;
 
-                while(true) {
-                    nextY += plusY;
-                    nextX += plusX;
-                    //벽이나 장애물을 만나지 못한 경우 계속 이동
-                    if(isMoved(nowY, nowX, nextY, nextX) || board[nextY][nextX] === 'D') {
-                        nextY -= plusY;
-                        nextX -= plusX;
-                        break;
-                    }
-                }
+    for (const [dx, dy] of move) {
+      let temp = [x, y];
+      while (true) {
+        const [nx, ny] = [temp[0] + dx, temp[1] + dy];
+        if (nx < 0 || nx >= board.length || ny < 0 || ny >= board[0].length) break;
+        if (board[nx][ny] === 'D') break;
 
-                if(visited.has(`${String(nextY).padStart(3, '0')}${String(nextX).padStart(3, '0')}`)) continue;
-                queue.enqueue([nextY, nextX, count + 1]);
-            }
-        }
+        temp = [nx, ny];
+      }
+      if (visited[temp[0]][temp[1]]) continue;
+      visited[temp[0]][temp[1]] = true;
 
-        return -1;
-    };
-
-    return bfs();
+      queue.push([count + 1, ...temp]);
+    }
+  }
+  return -1;
 }
