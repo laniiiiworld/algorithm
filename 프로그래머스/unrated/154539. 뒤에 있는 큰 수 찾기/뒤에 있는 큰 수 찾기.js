@@ -1,17 +1,26 @@
 function solution(numbers) {
     const n = numbers.length;
-    const dp = Array(n).fill(-1);
-    const stack = [0];
+    const answer = Array(n).fill(-1);
     
-    for(let i = 1; i < n; i++) {
-        const now = numbers[i];
-        while(stack.length) {
-            const before = numbers[stack[stack.length - 1]];
-            if(before >= now) break;
-            dp[stack.pop()] = now;
+    for(let i = n - 2; i >= 0; i--) {
+        for(let j = i + 1; j < n; j++) {
+            if(numbers[i] > numbers[j]) {
+                if(answer[j] == -1) {
+                    answer[i] = -1;
+                    break;
+                } else if(numbers[i] < answer[j]) {
+                    answer[i] = answer[j];
+                    break;
+                }
+            } else if(numbers[i] < numbers[j]) {
+                answer[i] = numbers[j];
+                break;
+            } else {
+                answer[i] = answer[j];
+                break;
+            }
         }
-        stack.push(i);
     }
-    
-    return dp;
+          
+    return answer;
 }
