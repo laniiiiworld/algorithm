@@ -4,11 +4,11 @@ function solution(n, times) {
     
     while(left <= right) {
         const mid = Math.floor((left + right) / 2);
-        const count = times.reduce((acc, time) => acc += Math.floor(mid / time), 0);
-        if(count < n) {
-            left = mid + 1;
-        } else {
+        const count = times.reduce((acc, cur) => acc += Math.floor(mid / cur), 0);
+        if(count >= n) {
             right = mid - 1;
+        } else {
+            left = mid + 1;
         }
     }
     
