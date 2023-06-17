@@ -1,28 +1,22 @@
 function solution(n, results) {
-    let answer = 0;
-    const gragh = Array.from({length: n+1}, () => ({win:new Set(), lose:new Set()}));
-    results.forEach(([won, lost]) => {
-        gragh[won].win.add(lost);
-        gragh[lost].lose.add(won);
-    });
-
-    for(let player=1; player<=n; player++) {
-        for(const lost of gragh[player].win) {
-            for(const p of gragh[player].lose) {
-                gragh[lost].lose.add(p);
-            }
-        }
-        for(const won of gragh[player].lose) {
-            for(const p of gragh[player].win) {
-                gragh[won].win.add(p);
+    const graph = Array.from({length: n + 1}, () => Array(n + 1).fill(0));
+    
+    for(const [a, b] of results) {
+        graph[a][b] = 1;
+        graph[b][a] = -1;
+    }
+    
+    for(let k = 1; k <= n; k++) {
+        for(let a = 1; a <= n; a++) {
+            for(let b = 1; b <= n; b++) {
+                if(graph[a][k] === 1 && graph[k][b] === 1) {
+                    graph[a][b] = 1;
+                } else if(graph[a][k] === -1 && graph[k][b] === -1) {
+                    graph[a][b] = -1;
+                }
             }
         }
     }
-
-    for(const player of gragh) {
-        const count = player.win.size + player.lose.size;
-        answer += (count === n-1)? 1 : 0;
-    }
-
-    return answer;
+    
+    return graph.filter(row => row.filter(v => !v).length === 2).length;
 }
