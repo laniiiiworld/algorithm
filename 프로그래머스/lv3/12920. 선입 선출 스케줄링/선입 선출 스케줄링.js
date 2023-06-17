@@ -2,22 +2,16 @@ function solution(n, cores) {
     let left = 0;
     let right = Math.max(...cores) * n;
     let time = 0;
-    let m = 0; //time까지 처리한 작업량
-    const getWorkCount = (time, cores) => {
-        if(time === 0) {
-            return cores.length;
-        }
-        return cores.reduce((acc, core) => acc += Math.floor(time / core), cores.length);
-    };
+    let m = 0;
     
-    while (left <= right) {  
+    while(left <= right) {
         const mid = Math.floor((left + right) / 2);
-        const count = getWorkCount(mid, cores);
+        const count = (mid === 0)? cores.length : cores.reduce((acc, cur) => acc += Math.floor(mid / cur), cores.length);
         
-        if (count >= n) {
-            right = mid - 1;   
-            time = mid;     
-            m = count; 
+        if(count >= n) {
+            right = mid - 1;
+            time = mid;
+            m = count;
         } else {
             left = mid + 1;
         }
@@ -29,6 +23,6 @@ function solution(n, cores) {
         if (m === n) break;
         m--;
     }
-    
+
     return answer + 1;
 }
