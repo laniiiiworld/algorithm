@@ -1,8 +1,8 @@
-function solution(str){
-    let sum = 0;
-    for(const s of str) {
-        sum += (s === '(')? 1 : -1;
-        if(sum < 0) return false;
+function solution(s){
+    let acc = 0;
+    for(let i = 0; i < s.length; i++) {
+        acc += (s[i] === '(')? 1 : -1;
+        if(acc < 0) return false;
     }
-    return sum === 0;
+    return acc === 0;
 }
