@@ -1,21 +1,18 @@
 function solution(n) {
-    if(n === 1) return 1;
+    let answer = 0;
+    let start = 1;
+    let end = 1;
+    let sum = 0;
     
-    let count = 0;
-    let left = 1;
-    let right = 1;
-    let sum = 1;
-    
-    while(left <= right) {
-        if(sum < n) {
-            sum += ++right;
-        } else {
-            if(sum === n) {
-                count += 1;
-            }
-            sum -= left++;
+    while(start <= n) {
+        while(end <= n && sum < n) {
+            sum += end++;
         }
+        
+        if(sum === n) answer++;
+        
+        sum -= start++;
     }
     
-    return count;
+    return answer;
 }
