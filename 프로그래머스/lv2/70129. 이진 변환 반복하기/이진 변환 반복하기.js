@@ -1,9 +1,15 @@
 function solution(s) {
-    var answer = [0,0];
-    while(s.length > 1) {
-        answer[0]++;
-        answer[1] += (s.match(/0/g)||[]).length;
-        s = s.replace(/0/g, '').length.toString(2);
+    const removeAllZero = (text) => text.replaceAll('0', '');
+    let changeCount = 0;
+    let removeCount = 0;
+    
+    while(s !== '1') {
+        changeCount += 1;
+        removeCount += s.length;
+        s = removeAllZero(s);
+        removeCount -= s.length;
+        s = s.length.toString(2);
     }
-    return answer;
+    
+    return [changeCount, removeCount];
 }
