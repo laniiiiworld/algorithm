@@ -1,19 +1,20 @@
 function solution(people, limit) {
-    let count = 0;
+    let answer = 0;
     let left = 0;
     let right = people.length - 1;
     
-    people.sort((a, b) => b - a);
+    people.sort((a, b) => a - b);
     
     while(left <= right) {
-        count++;
+        answer += 1;
+        
         if(people[left] + people[right] <= limit) {
-            left++;
-            right--;
+            left += 1;
+            right -= 1;
         } else {
-            left++;
+            right -= 1;
         }
     }
     
-    return count;
+    return answer;
 }
