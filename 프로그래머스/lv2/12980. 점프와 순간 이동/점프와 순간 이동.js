@@ -1,3 +1,7 @@
 function solution(n) {
-    return n.toString(2).replace(/0/g,'').length;
+    let answer = 0;
+    for(const value of n.toString(2)) {
+        answer += Number(value);
+    }
+    return answer;
 }
