@@ -1,8 +1,13 @@
 function solution(n, left, right) {
     const answer = [];
 
-    for (let i = left; i <= right; i++) {
-        answer.push(Math.max(i % n, parseInt(i / n)) + 1);
+    while (left++ <= right) {
+        const a = left % n;
+        const b = Math.ceil(left / n);
+        
+        if (!a) answer.push(n);
+        else if (a < b) answer.push(b);
+        else if (a < n) answer.push(a);
     }
 
     return answer;
