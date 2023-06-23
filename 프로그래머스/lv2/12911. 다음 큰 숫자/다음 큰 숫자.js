@@ -1,12 +1,34 @@
 function solution(n) {
-    let answer = n;
-    let count = n.toString(2).match(/1/g).length;
-    let result = 0;
+    let i = 0; //삭제된 개수
+    let j = 0; //삭제된 1의 개수
     
-    while(result !== count) {
-        answer += 1;
-        result = answer.toString(2).match(/1/g).length;
+    //마지막 1 찾기
+    while(!(n & 1)) {
+        n = n >> 1;
+        i += 1;
     }
     
-    return answer;
+    //1이 반복된 경우, 반복된 1 중 가장 앞의 1 찾기
+    while(n & 1) {
+        n = n >> 1;
+        i += 1;
+        j += 1;
+    }
+    
+    //마지막 0을 1로 변경
+    n += 1;
+    j -= 1;
+    
+    //뒤로 이동하며 필요한 개수만큼 0 추가
+    while(j < i--) {
+        n = n << 1;
+    }
+    
+    //뒤로 이동하며 필요한 개수만큼 1 추가
+    while(i-- >= 0) {
+        n = n << 1;
+        n += 1;
+    }
+    
+    return n;
 }
