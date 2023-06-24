@@ -1,21 +1,19 @@
-function solution(records) {
-    const message = {
-                     'Enter' : '님이 들어왔습니다.',
-                     'Leave' : '님이 나갔습니다.'
-                    };
-    const names = new Map();
-    const answer = [];
+function solution(record) {
+    const messages = {
+                        'Enter': '님이 들어왔습니다.', 
+                        'Leave': '님이 나갔습니다.'
+                     };
+    const result = [];
+    const user = new Map();
     
-    for(const record of records) {
-        const [command, id, nickname] = record.split(' ');
+    for(const text of record) {
+        const [type, id, name] = text.split(' ');
         
-        if(command !== 'Change') {
-            answer.push([id, command]);
-        }    
-        if(nickname) {
-            names.set(id, nickname);
-        }
+        if(type !== 'Leave') user.set(id, name);
+        if(type === 'Change') continue;
+        
+        result.push([id, messages[type]]);
     }
     
-    return answer.map(([id, command]) => `${names.get(id)}${message[command]}`);
+    return result.map(([id, message]) => `${user.get(id)}${message}`);
 }
