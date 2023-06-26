@@ -1,6 +1,5 @@
 function solution(s) {
-    const arr = s.split(',{')
-                 .map(text => text.replace(/{|}/g, '').split(',').map(Number))
+    const arr = JSON.parse(s.replace(/{/g, '[').replace(/}/g, ']'))
                  .sort((a, b) => a.length - b.length);
     const answer = [arr[0][0]];
     
