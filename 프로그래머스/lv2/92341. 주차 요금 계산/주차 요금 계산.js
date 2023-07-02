@@ -1,36 +1,21 @@
 function solution(fees, records) {
+    const parkingTime = {};
+    
+    records.forEach(r => {
+        let [time, id, type] = r.split(' ');
+        let [h, m] = time.split(':');
+        time = (h * 1) * 60 + (m * 1);
+        if (!parkingTime[id]) parkingTime[id] = 0;
+        if (type === 'IN') parkingTime[id] += (1439 - time);
+        if (type === 'OUT') parkingTime[id] -= (1439 - time);
+    });
+    
     const answer = [];
-    const cars = new Map();
-    const [baseTime, baseFee, unitTimeMi, unitFee] = fees;
-    const getTotalFee = (mi) => {
-        const time = mi - baseTime;
-        if(time <= 0) return baseFee;
-        return baseFee + Math.ceil(time/unitTimeMi) * unitFee;
-    };
-    
-    for(const info of records) {
-        const [time, number, inout] = info.split(' ');
-        const infos = cars.get(number) || [];
-        cars.set(number, [...infos, info]);
+    for (let [car, time] of Object.entries(parkingTime)) {
+        if (time <= fees[0]) time = fees[1];
+        else time = Math.ceil((time - fees[0]) / fees[2]) * fees[3] + fees[1]
+        answer.push([car, time]);
     }
     
-    for(const number of [...cars.keys()].sort((a, b) => a - b)) {
-        const infos = cars.get(number);
-        if(infos.length % 2) infos.push(`23:59 ${number} OUT`);
-        let totalTimes = [0, 0];
-        
-        for(const info of infos) {
-            const [time, number, inout] = info.split(' ');
-            let [hh, mi] = time.split(':').map(value => parseInt(value));
-            hh = (hh + Math.floor(mi / 60));
-            mi = mi % 60;
-            
-            totalTimes[0] += (inout === 'IN')? -hh : hh;
-            totalTimes[1] += (inout === 'IN')? -mi : mi;
-        }
-        
-        answer.push(getTotalFee(totalTimes[0]*60 + totalTimes[1]));
-    }
-    
-    return answer;
+    return answer.sort((a, b) => a[0] - b[0]).map(v => v[1]);
 }
