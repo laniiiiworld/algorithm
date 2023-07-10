@@ -1,9 +1,9 @@
 function solution(files) {
     return files
             .map(file => {
-                const head = file.match(/[a-zA-Z- ]+/g)[0];
-                const number = Number(file.match(/[0-9]+/g)[0]);
-                return [head.toUpperCase(), number, file];
+                const regexp = /^([a-zA-Z- ]+)([0-9]+)(.*)$/;
+                const [fullName, head, number] = file.match(regexp);
+                return [head.toUpperCase(), Number(number), file];
             })
             .sort((a, b) => {
                 if(a[0] > b[0]) return 1;
