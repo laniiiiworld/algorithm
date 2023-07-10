@@ -1,25 +1,24 @@
+//중복순열
 function solution(word) {
-    let answer = 0;
-    let isFind = false;
-    const baseLetters = ['A', 'E', 'I', 'O', 'U'];
-    const visited = Array(5).fill(false);
-    const dfs = (text) => {
-        if(text === word) {
-            isFind = true;
-            return;
-        }
-        if(text.length === 5) {
+    let count = 0;
+    let isEqual = false;
+    const alphbets = ['A', 'E', 'I', 'O', 'U'];
+    const dfs = (before) => {
+        if(before === word) {
+            isEqual = true;
             return;
         }
         
-        for(let i = 0; i < baseLetters.length; i++) {
-            if(isFind) break;
-            answer += 1;
-            dfs(`${text}${baseLetters[i]}`);
+        count += 1;
+        if(before.length === 5) return;
+        
+        for(let i = 0; i < alphbets.length; i++) {
+            if(isEqual) return;
+            dfs(`${before}${alphbets[i]}`);
         }
     };
     
-    dfs('', 0);
+    dfs('');
     
-    return answer;
+    return count;
 }
