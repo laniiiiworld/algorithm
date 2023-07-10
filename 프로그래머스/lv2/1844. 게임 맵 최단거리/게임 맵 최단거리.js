@@ -7,44 +7,44 @@ class Queue {
     size() {
         return this.rear - this.front;
     }
-    enqueue(value) {
-        this.queue.push(value);
+    enqueue(item) {
+        this.queue.push(item);
         this.rear += 1;
     }
     dequeue() {
-        const value = this.queue[this.front];
+        const returnItem = this.queue[this.front];
         delete this.queue[this.front++];
-        return value;
+        return returnItem;
     }
 }
-
 function solution(maps) {
     const n = maps.length - 1;
     const m = maps[0].length - 1;
-    const distance = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-    
-    const queue = new Queue();
-    queue.enqueue([0, 0, 1]);
-    maps[0][0] = 0;
-    
-    while(queue.size()) {
-        const [y, x, count] = queue.dequeue();
+    const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+    const canBeMoved = (row, col) => (row >= 0 && row <= n && col >= 0 && col <= m) && maps[row][col];
+    const bfs = (startY, startX) => {
+        const queue = new Queue();
+        queue.enqueue([startY, startX, 1]);
         
-        if(y === n && x === m) {
-            return count;
+        while(queue.size()) {
+            const [nowY, nowX, count] = queue.dequeue();
+            
+            if(maps[nowY][nowX] === 0) continue;
+            if(nowY === n && nowX === m) {
+                return count;
+            }
+            maps[nowY][nowX] = 0;
+            
+            for(const [plusY, plusX] of directions) {
+                const nextX = nowX + plusX;
+                const nextY = nowY + plusY;
+                if(!canBeMoved(nextY, nextX)) continue;
+                queue.enqueue([nextY, nextX, count + 1]);
+            }
         }
         
-        for(const [plusY, plusX] of distance) {
-            const nextY = y + plusY;
-            const nextX = x + plusX;
-            
-            if(nextX < 0 || nextY < 0 || nextX > m || nextY > n) continue;
-            if(maps[nextY][nextX] === 0) continue;
-            
-            maps[nextY][nextX] = 0;
-            queue.enqueue([nextY, nextX, count + 1]);
-        }
-    }
+        return -1;
+    };
     
-    return -1;
+    return bfs(0, 0);
 }
