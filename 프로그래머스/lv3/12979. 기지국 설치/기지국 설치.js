@@ -1,15 +1,17 @@
 function solution(n, stations, w) {
-    if(stations[stations.length - 1] + w < n) {
-        stations.push(n + w + 1);
-    }
-
-    const size = 2 * w + 1;
-    let before = - w;
+    let count = 0;
+    let now = 1;
     
-    return stations.reduce((sum, cur) => {
-        const difference = (cur - w) - (before + w + 1);
-        before = cur;
-        if(difference < 0) return sum;       
-        return sum += Math.ceil(difference / size);
-    }, 0);
+    for(const value of stations) {
+        if(now < value - w) {
+            count += Math.ceil((value - w - now) / (w * 2 + 1));
+        }
+        now = value + w + 1;
+    }
+    
+    if(now <= n) {
+        count += Math.ceil((n + 1 - now) / (w * 2 + 1));
+    }
+    
+    return count;
 }
