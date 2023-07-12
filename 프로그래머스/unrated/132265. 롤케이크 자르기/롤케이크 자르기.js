@@ -1,31 +1,30 @@
-function solution(toppings) {
-    const cake1 = new Map();
-    const cake2 = new Map();
+function solution(topping) {
+    let count = 0;
     
-    cake1.set(toppings[0], 1);
-    for(let i = 1; i < toppings.length; i++) {
-        cake2.set(toppings[i], cake2.get(toppings[i]) + 1 || 1);
+    const a = new Map();
+    const b = new Map();
+    
+    for(const value of topping) {
+        const count = a.get(value) || 0;
+        a.set(value, count + 1);
     }
-
-    let answer = cake1.size === cake2.size? 1 : 0;
     
-    for(let i = 1; i < toppings.length; i++) {
-        const count1 = cake1.get(toppings[i]) || 0;
-        const count2 = cake2.get(toppings[i]) || 0;
+    for(const value of topping) {
+        const countA = a.get(value) || 0;
+        const countB = b.get(value) || 0;
         
-        cake1.set(toppings[i], count1 + 1);
-        
-        if(count2 > 1) {
-            cake2.set(toppings[i], count2 - 1);
+        if(countA > 1) {
+            a.set(value, countA - 1);
         } else {
-            cake2.delete(toppings[i]);
+            a.delete(value);
         }
         
-        if(cake1.size > cake2.size) break;
-        if(cake1.size !== cake2.size) continue;
+        b.set(value, countB + 1);
         
-        answer += 1;
+        if(a.size === b.size) {
+            count += 1;
+        }
     }
     
-    return answer;
+    return count;
 }
