@@ -1,67 +1,57 @@
 function solution(m, n, board) {
-    const graph = Array.from({length: n}, () => []);
-    for(let i = m - 1; i >= 0; i--) {
-        const row = board[i].split('');
-        for(let j = 0; j < n; j++) {
-            graph[j].push(row[j]);
+    const removed = [];
+    const isSquare = (row, col, target) => board[row + 1][col] === target && board[row][col + 1] === target && board[row + 1][col + 1] === target;
+    const removeBlocks = () => {
+        while(removed.length) {
+            const [row, col] = removed.pop();
+            board[row][col] = '';
+            board[row + 1][col] = '';
+            board[row][col + 1] = '';
+            board[row + 1][col + 1] = '';
         }
-    }
-    
-    const stack = [];
-    const coordinates = [[0, 0], [1, 0], [1, 1], [0, 1]];
-    const findRemoveBlocks = () => {
-        let isFind = false;
-        
-        for(let y = 0; y < n; y++) {
-            for(let x = 0; x < m; x++) {
-                if(graph[y][x] === ' ') continue;
-                if(y + 1 === n || x + 1 === m) continue;
-                
-                let isEqual = true;
-                const nowBlock = graph[y][x];
-                for(const [plusX, plusY] of coordinates) {
-                    if(graph[y][x] === ' ') {
-                        isEqual = false;
-                        break;
-                    }
-                    if(plusY === n || plusX === m) {
-                        isEqual = false;
-                        break;
-                    }
-                    const nextX = x + plusX;
-                    const nextY = y + plusY;
-                    if(graph[nextY][nextX] !== nowBlock) {                        
-                        isEqual = false;
-                        break;
-                    }
+    };
+    const moveBlocks = () => {
+        const newBoard = Array.from({length: m}, () => Array.from({length: n}).fill(''));
+        const counts = Array(n).fill(0);
+        for(let j = 0; j < n; j++) {
+            const cols = [];
+            for(let i = 0; i < m; i++) {
+                if(board[i][j] === '') {
+                    counts[j] += 1;
+                } else {
+                    cols.push(board[i][j]);
                 }
-                if(!isEqual) continue;
-                for(const [plusX, plusY] of coordinates) {
-                    const nextX = x + plusX;
-                    const nextY = y + plusY;
-                    stack.push([nextX, nextY]);
-                    isFind = true;
+            }
+            
+            for(let i = 0; i < cols.length; i++) {
+                newBoard[i + counts[j]][j] = cols[i];
+            }
+        }
+        
+        return newBoard;
+    };
+    
+    board = board.map(row => row.split(''));
+    
+    let isChanged = true;
+    while(true) {
+        isChanged = false;
+        
+        for(let i = 0; i < m - 1; i++) {
+            for(let j = 0; j < n - 1; j++) {
+                if(board[i][j] === '') continue;
+                if(isSquare(i, j, board[i][j])) {
+                    removed.push([i, j]);
+                    isChanged = true;
                 }
             }
         }
         
-        return isFind;
-    };
-    
-    const removeBlocks = () => {
-        while(stack.length) {
-            const [x, y] = stack.pop();
-            graph[y][x] = '';
-        }
+        if(!isChanged) break;
         
-        for(let i = 0; i < n; i++) {
-            graph[i] = graph[i].join('').padEnd(m, ' ').split('');
-        }
-    };
-    
-    while(findRemoveBlocks()) {
         removeBlocks();
+        board = moveBlocks();
     }
     
-    return n*m - graph.reduce((sum, row) => sum += row.join('').replaceAll(' ', '').length, 0);
+    return board.reduce((acc, row) => acc += row.filter(v => !v).length, 0);
 }
