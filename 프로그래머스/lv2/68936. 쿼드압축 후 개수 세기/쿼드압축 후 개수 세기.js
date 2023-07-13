@@ -1,32 +1,34 @@
 function solution(arr) {
-    const visited = Array.from(Array(arr.length), () => Array(arr.length).fill(false));
+    const n = arr.length;
     const answer = [0, 0];
-    const checkArea = (startX, startY, size) => {
-        let num = arr[startX][startY];
-        for(let i=startX; i<startX+size; i++){
-            for(let j=startY; j<startY+size; j++){
-                if(arr[i][j] !== num) return -1;
+    const visited = Array.from({length: n}, () => Array(n).fill(false));
+    const visiteArr = (x, y, w) => {
+        for(let i = 0; i < w; i++) {
+            for(let j = 0; j < w; j++) {
+                arr[i + y][j + x] = true;
             }
         }
-        return num;
     };
-    const setVisited = (startX, startY, size) => {
-        for(let i=startX; i<startX+size; i++){
-            for(let j=startY; j<startY+size; j++){
-                visited[i][j] = true;
+    const isEquals = (x, y, w, target) => {
+        for(let i = 0; i < w; i++) {
+            for(let j = 0; j < w; j++) {
+                if(arr[i + y][j + x] !== target) return false;
             }
         }
+        
+        return true;
     };
     
     let width = arr.length;
     while(width >= 1) {
-        for(let i=0; i<arr.length; i+=width) {
-            for(let j=0; j<arr.length; j+=width) {
+        for(let i = 0; i < n; i += width) {
+            for(let j=0; j < n; j += width) {
                 if(visited[i][j]) continue;
-                const isMatched = checkArea(i, j, width);
-                if(isMatched === -1) continue;
-                setVisited(i, j, width);
-                answer[isMatched]++;
+                const value = arr[i][j];
+                if(isEquals(j, i, width, value)) {
+                    visiteArr(j, i, width);
+                    answer[value] += 1;
+                }
             }
         }
         width /= 2;
