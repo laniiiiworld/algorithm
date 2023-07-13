@@ -1,11 +1,11 @@
 function solution(n) {
-    let answer = '';
-    const base = ['4', '1', '2'];
+    const answer = [];
+    const base = [4, 1, 2];
     
-    while(n > 0) {
-        answer = base[n % 3] + answer;
-        n = ~~((n - 1) / 3);
+    while(n >= 1) {
+        answer.push(base[n % 3]);
+        n = n % 3? Math.floor(n / 3) : Math.floor((n - 1) / 3);
     }
     
-    return answer;
+    return answer.reverse().join('');
 }
