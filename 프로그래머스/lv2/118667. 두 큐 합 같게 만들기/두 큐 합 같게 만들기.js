@@ -3,50 +3,47 @@ class Queue {
         this.queue = [];
         this.front = 0;
         this.rear = 0;
+        this._sum = 0;
+    }
+    size() {
+        return this.rear - this.front;
+    }
+    getSum() {
+        return this._sum;
     }
     enqueue(value) {
         this.queue.push(value);
         this.rear += 1;
+        this._sum += value;
     }
     dequeue() {
         const value = this.queue[this.front];
         delete this.queue[this.front++];
+        this._sum -= value;
         return value;
     }
 }
-function solution(queue1, queue2) {
-    const arr1 = new Queue();
-    const arr2 = new Queue();
+
+function solution(q1, q2) {
+    const queue1 = new Queue();
+    const queue2 = new Queue();
+    for(const value of q1) queue1.enqueue(value);
+    for(const value of q2) queue2.enqueue(value);
+    const target = (queue1.getSum() + queue2.getSum()) / 2;
     
-    let sum1 = 0;
-    for(const value of queue1) {
-        arr1.enqueue(value);
-        sum1 += value;
-    }
-    let sum2 = 0;
-    for(const value of queue2) {
-        arr2.enqueue(value);
-        sum2 += value;
-    }
+    if(target !== Math.floor(target)) return -1;
     
-    let answer = 0;
-    let count = queue1.length * 3;
-    while(count--) {
-        if(sum1 === sum2) {
-            return answer;
-        }
-        if(sum1 < sum2) {
-            const value = arr2.dequeue();
-            arr1.enqueue(value);
-            sum1 += value;
-            sum2 -= value;
+    let count = 0;
+    while(count < q1.length * 3) {
+        if(queue1.getSum() === queue2.getSum()) return count;
+        
+        count += 1;
+        
+        if(queue1.getSum() < queue2.getSum()) {
+            queue1.enqueue(queue2.dequeue());
         } else {
-            const value = arr1.dequeue();
-            arr2.enqueue(value);
-            sum1 -= value;
-            sum2 += value;
+            queue2.enqueue(queue1.dequeue());
         }
-        answer += 1;
     }
     
     return -1;
