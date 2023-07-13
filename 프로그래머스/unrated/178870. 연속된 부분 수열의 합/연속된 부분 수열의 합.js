@@ -1,19 +1,18 @@
 function solution(sequence, k) {
     const n = sequence.length;
-    let answer = [0, n];
+    let [start, end] = [0, n];
+    let [s, e] = [0, 0];
     let sum = 0;
-    let start = 0;
-    let end = 0;
     
-    while(start < n) {
-        while(end < n && sum < k) {
-            sum += sequence[end++];
+    while(s < n) {
+        while(sum < k && e < n) {
+            sum += sequence[e++];
         }
-        if(sum === k && end - start < answer[1] - answer[0] + 1) {
-            answer = [start, end - 1];
+        if(sum === k && end - start + 1 > e - s) {
+            [start, end] = [s, e - 1];
         }
-        sum -= sequence[start++];
+        sum -= sequence[s++];
     }
     
-    return answer;
+    return [start, end];
 }
