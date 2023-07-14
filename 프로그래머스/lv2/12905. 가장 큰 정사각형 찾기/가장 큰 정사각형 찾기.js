@@ -1,18 +1,16 @@
 function solution(board) {
     const n = board.length;
     const m = board[0].length;
+    const isSquare = (y, x) => board[y][x] && board[y - 1][x] && board[y][x - 1] && board[y - 1][x - 1];
     
-    if(Math.min(n, m) === 1) return Math.max(...board.flat());
-    
-    let answer = 1;
-    
-    for(let row = 1; row < n; row++) {
-        for(let col = 1; col < m; col++) {
-            if(!board[row][col] || !board[row - 1][col] || !board[row][col - 1] || !board[row - 1][col - 1]) continue;
-            board[row][col] = Math.min(board[row - 1][col], board[row][col - 1], board[row - 1][col - 1]) + 1;
-            answer = Math.max(answer, board[row][col]);
+    let max = board.reduce((acc, row) => acc = Math.max(acc, ...row), 0);
+    for(let y = 1; y < n; y++) {
+        for(let x = 1; x < m; x++) {
+            if(!isSquare(y, x)) continue;
+            board[y][x] = Math.min(board[y - 1][x], board[y][x - 1], board[y - 1][x - 1]) + 1;
+            max = Math.max(max, board[y][x]);
         }
     }
     
-    return Math.max(...board.map(row=>Math.max(...row)))**2;
+    return max * max;
 }
