@@ -1,49 +1,33 @@
 function solution(orders, course) {
-    const getLimitedArr = (limit, arr) => {
-        const results = [];
-        const n = arr.length;
-        const visited = Array(n).fill(false);
-        const dfs = (start, text) => {
-            if(text.length === limit) {
-                results.push(text);
-                return;
-            }
-            
-            for(let i = start; i < n; i++) {
-                if(visited[i]) continue;
-                visited[i] = true;
-                dfs(i, `${text}${arr[i]}`);
-                visited[i] = false;
-            }
-        };
-        
-        dfs(0, '');
-        
-        return results;
-    };
-    
-    const getCandidate = (limit) => {
-        const menus = new Map();
-        
-        for(const order of orders) {
-            const arr = getLimitedArr(limit, [...order].sort());
-            for(const item of arr) {
-                const count = menus.get(item) || 0;
-                menus.set(item, count + 1);
-            }
-        }
-        
-        const maxCount = Math.max(...menus.values());
-        return [...menus.entries()]
-                        .filter(item => item[1] > 1 && item[1] === maxCount)
-                        .sort((a, b) => b[1] - a[1])
-                        .map(item => item[0]);
-    };
-    
-    const answer = [];
-    for(const value of course) {
-        answer.push(getCandidate(value));
+  const ordered = {};
+  const candidates = {};
+  const maxNum = Array(10 + 1).fill(0);
+  const createSet = (arr, start, len, foods) => {
+    if (len === 0) {
+      ordered[foods] = (ordered[foods] || 0) + 1;
+      if (ordered[foods] > 1) candidates[foods] = ordered[foods];
+      maxNum[foods.length] = Math.max(maxNum[foods.length], ordered[foods]);
+      return;
     }
-    
-    return answer.flat().sort();
+
+    for (let i = start; i < arr.length; i++) {
+      createSet(arr, i + 1, len - 1, foods + arr[i]);
+    }
+  };
+
+  orders.forEach((od) => {
+    // arr.sort는 기본적으로 사전식 배열
+    const sorted = od.split('').sort();
+    // 주문한 음식을 사전순으로 배열해서 문자열을 만든다.
+    // course에 있는 길이만 만들면 된다.
+    course.forEach((len) => {
+      createSet(sorted, 0, len, '');
+    });
+  });
+
+  const launched = Object.keys(candidates).filter(
+    (food) => maxNum[food.length] === candidates[food]
+  );
+
+  return launched.sort();
 }
