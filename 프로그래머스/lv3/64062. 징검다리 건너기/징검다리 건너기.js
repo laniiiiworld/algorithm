@@ -1,22 +1,19 @@
 function solution(stones, k) {
-    const getCount = (limit) => {
-        let result = 0;
-        for(const stone of stones) {
-            if(result >= k) break;
-            if(stone > limit) {
-                result = 0;
-                continue;
-            }
-            result += 1;
-        }
-        return result;
-    };
     let left = 0;
     let right = 200_000_000;
     
     while(left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        const count = getCount(mid);
+        const mid = parseInt((left + right) / 2);
+        let count = 0;
+        for(const stone of stones) {
+            if(stone <= mid) {
+                count += 1;
+            } else {
+                count = 0;
+            }
+            if(count === k) break;
+        }
+        
         if(count < k) {
             left = mid + 1;
         } else {
