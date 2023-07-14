@@ -9,16 +9,16 @@ class MinHeap {
         this.heap.push(item);
         
         let currentIndex = this.heap.length - 1;
-        let parentIndex = ~~(currentIndex / 2);
+        let parentIndex = Math.floor(currentIndex / 2);
         
-        while(parentIndex >= 1 && this.heap[currentIndex][1] < this.heap[parentIndex][1]) {
+        while(parentIndex > 0 && this.heap[currentIndex][1] < this.heap[parentIndex][1]) {
             this._swap(currentIndex, parentIndex);
             currentIndex = parentIndex;
-            parentIndex = ~~(currentIndex / 2);
+            parentIndex = Math.floor(currentIndex / 2);
         }
     }
     pop() {
-        if(this.heap.length === 2) return this.heap.pop();
+        if(this.size() === 1) return this.heap.pop();
         
         const returnItem = this.heap[1];
         this.heap[1] = this.heap.pop();
@@ -27,9 +27,9 @@ class MinHeap {
         let leftIndex = 2;
         let rightIndex = 3;
         
-        if(!this.heap[leftIndex]) {
+        if(this.size() === 1) {
             return returnItem;
-        } else if(!this.heap[rightIndex]) {
+        } else if(this.size() === 2) {
             if(this.heap[leftIndex][1] < this.heap[currentIndex][1]) {
                 this._swap(leftIndex, currentIndex);
             }
@@ -38,12 +38,13 @@ class MinHeap {
         
         while((this.heap[leftIndex][1] < this.heap[currentIndex][1]) || 
               (this.heap[rightIndex][1] < this.heap[currentIndex][1])) {
-            const minIndex = (this.heap[leftIndex][1] <= this.heap[rightIndex][1])? leftIndex : rightIndex;
-            this._swap(leftIndex, rightIndex);
+            const minIndex = (this.heap[leftIndex][1] < this.heap[rightIndex][1])? leftIndex : rightIndex;
+            this._swap(minIndex, currentIndex);
             
             currentIndex = minIndex;
             leftIndex = currentIndex * 2;
             rightIndex = currentIndex * 2 + 1;
+            
             if(leftIndex >= this.heap.length - 1) break;
         }
         
@@ -56,27 +57,29 @@ class MinHeap {
 function solution(N, road, K) {
     const distance = Array(N + 1).fill(Infinity);
     const graph = Array.from({length: N + 1}, () => []);
-    const heap = new MinHeap();
-    
-    for(const [a, b, c] of road) {
-        graph[a].push([b, c]);
-        graph[b].push([a, c]);
-    }
-    
-    heap.push([1, 0]);
-    
-    while(heap.size()) {
-        const [now, nowCost] = heap.pop();
+    const bfs = (start) => {
+        const heap = new MinHeap();
+        heap.push([start, 0]);
+        distance[start] = 0;
         
-        if(distance[now] <= nowCost) continue;
-        distance[now] = nowCost;
-        
-        for(const [next, plusCost] of graph[now]) {
-            const nextCost = nowCost + plusCost;
-            if(distance[next] <= nextCost) continue;
-            heap.push([next, nextCost]);
+        while(heap.size()) {
+            const [now, nowCost] = heap.pop();
+            
+            for(const [next, plusCost] of graph[now]) {
+                const calcCost = nowCost + plusCost;
+                if(distance[next] <= calcCost) continue;
+                distance[next] = calcCost;
+                heap.push([next, calcCost]);
+            }
         }
+    };
+    
+    for(const [a, b, cost] of road) {
+        graph[a].push([b, cost]);
+        graph[b].push([a, cost]);
     }
+    
+    bfs(1);
     
     return distance.filter(v => v <= K).length;
 }
