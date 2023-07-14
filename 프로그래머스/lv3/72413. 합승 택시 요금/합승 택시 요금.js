@@ -1,26 +1,29 @@
 function solution(n, s, a, b, fares) {
-    const graph = Array.from({length: n + 1}, (_, i) => Array.from({length: n + 1}, (_, j) => i === j? 0 : Infinity));
-    for(const [c, d, cost] of fares) {
-        graph[c][d] = cost;
-        graph[d][c] = cost;
+    const graph = Array.from({length: n + 1}, (_, i) => {
+        return Array.from({length: n + 1}, (_, j) => (i === j)? 0 : Infinity);
+    });
+    
+    for(const [c, d, f] of fares) {
+        graph[c][d] = f;
+        graph[d][c] = f;
     }
     
-    for(let k = 1; k <= n; k++) {
-        for(let c = 1; c <= n; c++) {
-            for(let d = 1; d <= n; d++) {
-                const calcCost = graph[c][k] + graph[k][d];
-                if(graph[c][d] <= calcCost) continue;
-                graph[c][d] = calcCost;
-                graph[d][c] = calcCost;
+    for(let mid = 1; mid <= n; mid++) {
+        for(let start = 1; start <= n; start++) {
+            for(let end = 1; end <= n; end++) {
+                const calcFee = graph[start][mid] + graph[mid][end];
+                if(graph[start][end] <= calcFee) continue;
+                graph[start][end] = calcFee;
             }
         }
     }
-        
-    let fare = Infinity;
-    for(let k = 1; k <=n ; k++) {
-        const calcFare = graph[s][k] + graph[k][a] + graph[k][b];
-        fare = Math.min(fare, calcFare);
+    
+    let fee = graph[s][a] + graph[s][b];
+    for(let share = 1; share <= n; share++) {
+        const calcFee = graph[s][share] + graph[share][a] + graph[share][b];
+        if(fee <= calcFee) continue;
+        fee = calcFee;
     }
     
-    return fare;
+    return fee;
 }
