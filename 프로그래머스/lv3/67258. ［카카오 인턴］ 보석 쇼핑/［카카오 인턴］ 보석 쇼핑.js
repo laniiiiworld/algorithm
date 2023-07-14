@@ -1,33 +1,27 @@
 function solution(gems) {
-    const standard = new Set(gems);
-    const cart = new Map();
-    let length = gems.length + 1;
-    let answer = [0, 0];
-    let left = 0;
-    let right = 0;
+    const n = gems.length;
+    const types = new Set(gems);
+    const carts = new Map();
+    let [start, end] = [0, gems.length];
+    let [s, e] = [0, 0];
     
-    while(right <= gems.length) {
-        while(cart.size < standard.size) {
-            const gem = gems[right];
-            const count = cart.get(gem) || 0;
-            cart.set(gem, count + 1);
-            right += 1;
+    while(s < n) {
+        while(e < n && carts.size < types.size) {
+            const gem = gems[e++];
+            const count = carts.get(gem) || 0;
+            carts.set(gem, count + 1);
         }
-        
-        if(cart.size === standard.size && right - left < length) {
-            length = right - left;
-            answer = [left + 1, right];
+        if(carts.size === types.size && end - start + 1 > e - s) {
+            [start, end] = [s + 1, e];
         }
-        
-        const gem = gems[left];
-        const count = cart.get(gem);
-        if(count === 1) {
-            cart.delete(gem);
+        const gem = gems[s++];
+        const count = carts.get(gem);
+        if(count > 1) {
+            carts.set(gem, count - 1);
         } else {
-            cart.set(gem, count - 1);
+            carts.delete(gem);
         }
-        left += 1;
     }
     
-    return answer;
+    return [start, end];
 }
