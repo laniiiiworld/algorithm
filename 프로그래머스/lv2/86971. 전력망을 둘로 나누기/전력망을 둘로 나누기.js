@@ -17,7 +17,6 @@ class Queue {
         return value;
     }
 }
-
 function solution(n, wires) {
     let answer = n;
     const bfs = (graph) => {
@@ -34,8 +33,8 @@ function solution(n, wires) {
             
             for(const next of graph[now]) {
                 if(visited[next]) continue;
-                visited[next] = true;
                 queue.enqueue(next);
+                visited[next] = true;
             }
         }
         
@@ -43,14 +42,15 @@ function solution(n, wires) {
     };
     
     for(let i = 0; i < wires.length; i++) {
-        const copiedWires = [...wires.slice(0, i), ...wires.slice(i + 1)];
+        const newWires = [...wires.slice(0, i), ...wires.slice(i + 1)];
         const graph = Array.from({length: n + 1}, () => []);
-        for(const [start, end] of copiedWires) {
+        for(const [start, end] of newWires) {
             graph[start].push(end);
             graph[end].push(start);
         }
-        const count = bfs(graph);
-        answer = Math.min(answer, Math.abs((n - count) - count));
+        const network1 = bfs(graph);
+        const network2 = n - network1;
+        answer = Math.min(answer, Math.abs(network1 - network2));
     }
     
     return answer;
