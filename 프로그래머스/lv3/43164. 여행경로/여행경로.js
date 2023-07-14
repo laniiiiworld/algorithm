@@ -1,12 +1,14 @@
-function solution(tickets) {
-    let answer = [];
+function  solution(tickets) {
+    const answer = [];
     const graph = new Map();
-    const dfs = (now) => {
-        const destinations = graph.get(now) || [];
+    const dfs = (start) => {
+        const destinations = graph.get(start) || [];
+        
         while(destinations.length) {
-            dfs(destinations.shift());
+            dfs(destinations.pop());
         }
-        answer.push(now);
+        
+        answer.push(start);
     };
     
     for(const [start, end] of tickets) {
@@ -15,8 +17,8 @@ function solution(tickets) {
     }
     
     for(const start of graph.keys()) {
-        const destinations = graph.get(start) || [];
-        graph.set(start, destinations.sort());
+        const destinations = graph.get(start).sort().reverse();
+        graph.set(start, destinations);
     }
     
     dfs('ICN');
