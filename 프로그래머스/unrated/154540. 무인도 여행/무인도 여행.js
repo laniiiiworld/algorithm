@@ -7,51 +7,49 @@ class Queue {
     size() {
         return this.rear - this.front;
     }
-    enqueue(value) {
-        this.queue.push(value);
+    enqueue(item) {
+        this.queue.push(item);
         this.rear += 1;
     }
     dequeue() {
-        const value = this.queue[this.front];
+        const item = this.queue[this.front];
         delete this.queue[this.front++];
-        return value;
+        return item;
     }
 }
 function solution(maps) {
     const answer = [];
     const n = maps.length;
     const m = maps[0].length;
-    const distance = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-    const visited = Array.from({length: n}, () => Array(m).fill(false));
-    const bfs = (row, col) => {
+    const graph = maps.map(row => row.split(''));
+    const bfs = (y, x) => {
         let result = 0;
+        const canMove = (row, col) => row >= 0 && row < n && col >= 0 && col < m && graph[row][col] !== 'X';
         const queue = new Queue();
-        
-        queue.enqueue([col, row]);
-        visited[row][col] = true;
+        queue.enqueue([y, x]);
         
         while(queue.size()) {
-            const [x, y] = queue.dequeue();
+            const [nowY, nowX] = queue.dequeue();
             
-            result += Number(maps[y][x]);
-            
-            for(const [plusX, plusY] of distance) {
-                const nextX = x + plusX;
-                const nextY = y + plusY;
-                if(nextX < 0 || nextY < 0 || nextX === m || nextY === n) continue;
-                if(maps[nextY][nextX] === 'X' || visited[nextY][nextX]) continue;
+            if(graph[nowY][nowX] === 'X') continue;
+            result += Number(graph[nowY][nowX]);
+            graph[nowY][nowX] = 'X';
                 
-                visited[nextY][nextX] = true;
-                queue.enqueue([nextX, nextY]);
+            for(const [plusY, plusX] of [[-1, 0], [0, 1], [1, 0], [0, -1]]) {
+                const nextY = nowY + plusY;
+                const nextX = nowX + plusX;
+                if(!canMove(nextY, nextX)) continue;
+                queue.enqueue([nextY, nextX]);
             }
         }
+        
         return result;
     };
     
-    for(let i = 0; i < n; i++) {
-        for(let j = 0; j < m; j++) {
-            if(maps[i][j] === 'X' || visited[i][j]) continue;
-            answer.push(bfs(i, j));
+    for(let row = 0; row < n; row++) {
+        for(let col = 0; col < m; col++) {
+            if(graph[row][col] === 'X') continue;
+            answer.push(bfs(row, col));
         }
     }
     

@@ -1,10 +1,10 @@
 # [unrated] 무인도 여행 - 154540 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/154540?language=javascript) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/154540) 
 
 ### 성능 요약
 
-메모리: 33.6 MB, 시간: 1.09 ms
+메모리: 33.7 MB, 시간: 0.79 ms
 
 ### 구분
 
