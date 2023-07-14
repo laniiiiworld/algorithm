@@ -1,45 +1,51 @@
 function solution(expression) {
-    let answer = 0;
-    const baseOperations = ['+','-','*'];
-    const visited = Array(baseOperations.length).fill(false);
-    const calculate = (operation, numbers, operations) => {
-        const arr1 = [numbers[0]];
-        const arr2 = [];
+    let max = 0;
+    const baseOperations = ['+', '-', '*'];
+    const visited = Array(3).fill(false);
+    const calculate = (operands, operations, now) => {
+        if(!operations.includes(now)) return [operands, operations];
+        
+        const newOperands = [operands[0]];
+        const newOperations = [];
         
         for(let i = 0; i < operations.length; i++) {
-            if(operations[i] !== operation) {
-                arr1.push(numbers[i + 1]);
-                arr2.push(operations[i]);
-                continue;
+            const operation = operations[i];
+            if(operation === now) {
+                if(now === '+') {
+                    newOperands.push(newOperands.pop() + operands[i + 1]);
+                } else if(now === '-') {
+                    newOperands.push(newOperands.pop() - operands[i + 1]);
+                } else if(now === '*') {
+                    newOperands.push(newOperands.pop() * operands[i + 1]);
+                }
+            } else {
+                newOperands.push(operands[i + 1]);
+                newOperations.push(operation);
             }
-            
-            let before = arr1.pop();
-            
-            if(operation === '*') arr1.push(before * numbers[i + 1]);
-            if(operation === '+') arr1.push(before + numbers[i + 1]);
-            if(operation === '-') arr1.push(before - numbers[i + 1]);
         }
         
-        return [arr1, arr2];
+        return [newOperands, newOperations];
     };
-    const dfs = (operation, depth, numbers, operations) => {
+    const dfs = (operation, operands, operations) => {
         if(operation) {
-            [numbers, operations] = calculate(operation, numbers, operations);
+            [operands, operations] = calculate(operands, operations, operation);
         }
-        if(depth === baseOperations.length) {
-            answer = Math.max(answer, Math.abs(numbers[0]));
+        if(operations.length === 0) {
+            max = Math.max(max, Math.abs(operands[0]));
             return;
         }
-        
-        for(let i = 0; i < baseOperations.length; i++) {
+        for(let i = 0; i < 3; i++) {
             if(visited[i]) continue;
             visited[i] = true;
-            dfs(baseOperations[i], depth + 1, numbers, operations);
+            dfs(baseOperations[i], operands, operations);
             visited[i] = false;
         }
     };
     
-    dfs('', 0, expression.split(/[-*+]/g).map(Number), expression.match(/[-*+]/g));
     
-    return answer;
+    const operands = expression.split(/[\+\-\*]/g).map(Number);
+    const operations = expression.match(/[\+\-\*]/g);
+    dfs('', operands, operations);
+    
+    return max;
 }
