@@ -1,26 +1,32 @@
 function solution(weights) {
-    const peoples = new Map();
+    let count = 0;
+    const myMap = new Map();
+    const canBeBestFriend = (a, b) => {
+        for(const value of myMap.get(b).weights) {
+            if(myMap.get(a).weights.includes(value)) return true;
+        }
+        return false;
+    };
+    
     for(const weight of weights) {
-        const count = peoples.get(weight) || 0;
-        peoples.set(weight, count + 1);
+        const item = myMap.get(weight) || {weights:[weight * 2, weight * 3, weight * 4], count: 0};
+        myMap.set(weight, {...item, count : item.count + 1});
     }
-    const arr = [...peoples.keys()];
-    const answer = Array(peoples.size).fill(0);
-    const graph = arr.map(v => [v * 2, v * 3, v * 4]);
-    for(let i = 0; i < graph.length; i++) {
-        for(let j = 0; j < 4; j++) {
-            for(let k = i + 1; k < graph.length; k++) {
-                if(!graph[k].includes(graph[i][j])) continue;
-                answer[i] += peoples.get(arr[i]) * peoples.get(arr[k]);
+    
+    const keys = [...myMap.keys()];
+    for(let i = 0; i < keys.length; i++) {
+        const countI = myMap.get(keys[i]).count;
+        if(countI > 1) {
+            for(let plus = 1; plus < countI; plus++) {
+                count += plus;
             }
         }
-    }
-    for(let i = 0; i < arr.length; i++) {
-        const count = peoples.get(arr[i]);
-        if(count > 1) {
-            answer[i] += count * (count - 1) / 2;
+        for(let j = i + 1; j < keys.length; j++) {
+            if(!canBeBestFriend(keys[i], keys[j])) continue;
+            const countJ = myMap.get(keys[j]).count;
+            count += countI * countJ;
         }
     }
     
-    return answer.reduce((acc, cur) => acc += cur, 0);
+    return count;
 }
