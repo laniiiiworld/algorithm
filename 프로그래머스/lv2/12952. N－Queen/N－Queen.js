@@ -1,30 +1,25 @@
 function solution(n) {
-    let answer = 0;
-    const queens = Array(n).fill(-1);
-    const isEnable = (row, col) => {
-        for(let r = 0; r < n; r++) {
-            const c = queens[r];
-            if(c === -1) break;
-            if(r === row) return false;
-            if(c === col) return false;
-            if(Math.abs(r - row) === Math.abs(c - col)) return false;
+    let count = 0;
+    const queen = Array(n).fill(0); //index : 행, queen[index] : 열
+    const check = (row) => {
+        for(let i=0; i<row; i++) {
+            if(queen[i] === queen[row] || Math.abs(queen[i] - queen[row]) === (row - i)) {
+                return false;
+            }
         }
         return true;
     };
-    const dfs = (row) => {
-        if(row === n) {
-            answer += 1;
-            return;
-        }
-        for(let col = 0; col < n; col++) {
-            queens[row] = -1;
-            if(!isEnable(row, col)) continue;
-            queens[row] = col;
-            dfs(row + 1);
+    const search = (row) => {
+        if(row === n) count += 1;
+
+        for(let col=0; col<n; col++) {
+            queen[row] = col;
+            if(!check(row)) continue;
+            search(row+1);
         }
     };
-    
-    dfs(0);
-    
-    return answer;
+
+    search(0);
+
+    return count;
 }
