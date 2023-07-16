@@ -1,26 +1,23 @@
 function solution(N, number) {
-    const MAX = 8;
-    const dp = Array.from({length: MAX + 1}, (_, i) => {
-        const mySet = new Set();
-        mySet.add(Number(String(N).repeat(i)));
-        return mySet;
-    });
+    if(number === N) return 1;
     
-    for(let count = 1; count <= MAX; count++) {
-        for(let i = count - 1; i > 0; i--) {
-            for(const a of dp[i]) {
-                for(const b of dp[count - i]) {
-                    const calculated = [a + b, a - b, a * b, Math.floor(a / b)];
-                    for(const result of calculated) {
-                        dp[count].add(result);
-                    }
-                }
+    const dp = Array.from({length: 9}, (_, i) => new Set([parseInt(String(N).repeat(i) || '0')]));
+    const addValues = (i, arr1, arr2) => {
+        for(const value1 of arr1) {
+            for(const value2 of arr2) {
+                dp[i].add(value1 + value2);
+                dp[i].add(value1 - value2);
+                dp[i].add(value1 * value2);
+                dp[i].add(Math.floor(value1 / value2));
             }
         }
-        
-        if(dp[count].has(number)) {
-            return count;
+    };
+    
+    for(let i = 2; i < dp.length; i++) {
+        for(let j = 1; j < i; j++) {
+            addValues(i, dp[i - j], dp[j]);
         }
+        if(dp[i].has(number)) return i;
     }
     
     return -1;
