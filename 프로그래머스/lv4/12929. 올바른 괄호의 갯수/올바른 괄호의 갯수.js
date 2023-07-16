@@ -4,8 +4,8 @@ function solution(n) {
     dp[1] = 1;
     
     for(let i = 2; i <= n; i++) {
-        for(let j = i; j > 0; j--) {
-            dp[i] += dp[j - 1] * dp[i - j];
+        for(let j = 1; j <= i; j++) {
+            dp[i] += dp[i - j] * dp[j - 1];
         }
     }
     
