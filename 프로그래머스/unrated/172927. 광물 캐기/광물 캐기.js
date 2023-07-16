@@ -1,36 +1,40 @@
 function solution(picks, minerals) {
     let answer = 0;
-    const tools = ['diamond', 'iron', 'stone'];
-    const toolsLength = picks.reduce((acc, cur) => acc += cur, 0);
-    const MAX = Math.min(minerals.length, toolsLength * 5);
-    const getUsedHP = (tool, start) => {
-        const table = { 
-                        'diamond' : {'diamond' : 1, 'iron' : 1, 'stone' : 1}
-                      , 'iron' : {'diamond' : 5, 'iron' : 1, 'stone' : 1}
-                      , 'stone' : {'diamond' : 25, 'iron' : 5, 'stone' : 1}
-                      };
-        let used = 0;
+    const fatigue = [[1, 1, 1], 
+                     [5, 1, 1], 
+                     [25, 5, 1]];
+    const tools = picks
+                    .reduce((acc, count, type) => {
+                        for(let i = 0; i < count; i++) {
+                            acc.push(type);
+                        }                        
+                        return acc;
+                    }, []);
+    const mineralIndexs = ['diamond', 'iron', 'stone'];
+    const works = [];
+
+    let start = 0;
+    while(works.length < tools.length && start < minerals.length) {
+        let hp = 0;
+        const arr = [];
         for(let i = start; i < Math.min(minerals.length, start + 5); i++) {
-            used += table[tool][minerals[i]];
+            const mineral = mineralIndexs.indexOf(minerals[i]);
+            hp += fatigue[2][mineral];
+            arr.push(mineral);
         }
-        return used;
-    };
-    
-    const arr = [];
-    let i = 0;
-    while(i < MAX) {
-        arr.push([i, getUsedHP('stone', i)]);
-        i += 5;
+        works.push({hp, arr});
+        start += 5;
     }
     
-    arr.sort((a, b) => a[1] - b[1]);
+    works.sort((a, b) => a.hp - b.hp);
+    tools.sort((a, b) => b - a);
     
-    for(let i = 0; i < picks.length; i++) {
-        let count = picks[i];
-        while(count > 0 && arr.length) {
-            const [start, usedHP] = arr.pop();
-            answer += getUsedHP(tools[i], start);
-            count -= 1;
+    let index = 0;
+    while(tools.length && works.length) {
+        const arr = works.pop().arr;
+        const tool = tools.pop();
+        for(let i = 0; i < arr.length; i++) {
+            answer += fatigue[tool][arr[i]];
         }
     }
     

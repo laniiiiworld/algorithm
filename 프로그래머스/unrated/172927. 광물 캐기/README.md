@@ -1,10 +1,10 @@
 # [unrated] 광물 캐기 - 172927 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/172927) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/172927#qna) 
 
 ### 성능 요약
 
-메모리: 33.5 MB, 시간: 0.33 ms
+메모리: 33.5 MB, 시간: 0.35 ms
 
 ### 구분
 
