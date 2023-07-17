@@ -1,10 +1,10 @@
 # [unrated] 우박수열 정적분 - 134239 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/134239#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/134239) 
 
 ### 성능 요약
 
-메모리: 37.3 MB, 시간: 3.25 ms
+메모리: 38.3 MB, 시간: 2.08 ms
 
 ### 구분
 
