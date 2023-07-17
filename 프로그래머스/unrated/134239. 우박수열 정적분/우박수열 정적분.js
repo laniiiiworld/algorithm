@@ -16,11 +16,8 @@ function solution(k, ranges) {
         graph[i] = min + (max - min) / 2 + graph[i - 1];
     }
     
-    return ranges.map(range => {
-        let [start, end] = range;
-        if(start === 0 && end === 0) return graph[graph.length - 1];
-        end = (end > 0)? end - 1 : graph.length + end - 1;
-        if(start > end) return -1;
-        return graph.at(end) - graph.at(start);
+    return ranges.map(([start, end]) => {
+        if(start > graph.length + end - 1) return -1;
+        return graph.at(end - 1) - graph.at(start);
     });
 }
