@@ -8,7 +8,7 @@ function solution(n, works) {
     
     let answer = 0;
     let rest = total - n;
-    let share = Math.floor(rest / m);
+    let share = Math.ceil(rest / m);
     
     for(let i = 0; i < m; i++) {
         let now = Math.min(works[i], share);
