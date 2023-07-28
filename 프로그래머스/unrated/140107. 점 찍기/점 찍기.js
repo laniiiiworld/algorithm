@@ -1,10 +1,10 @@
 function solution(k, d) {
-    let count = ~~(d / k) * 2 + 1; //직선인 경우의 수
+    let answer = Math.floor(d / k) * 2 + 1;
     
-    //직각삼각형 빗변의 길이 : a제곱 + b제곱 = c제곱 응용
-    for(let i = k; i <= d; i += k) {
-        count += ~~(Math.sqrt(d * d - i * i) / k);
+    for(let a = k; a <= d; a += k) {
+        const b = Math.sqrt(d * d - a * a);
+        answer += Math.floor(b / k);
     }
     
-    return count;
+    return answer;
 }
