@@ -1,10 +1,10 @@
 function solution(w, h) {
-    const slope = h / w;
-    let result = 0;
-
-    for(let i = 1; i <= w; i++){
-        result += Math.ceil(slope * i);
+    const slope = w / h;
+    let count = 0;
+    
+    for(let i = 1; i <= w; i++) {
+        count += Math.ceil(i / slope);
     }
-
-    return ((h * w) - result) * 2;
+    
+    return ((w * h) - count) * 2;
 }
