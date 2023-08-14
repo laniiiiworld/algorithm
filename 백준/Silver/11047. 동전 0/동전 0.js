@@ -6,9 +6,8 @@ let result = 0;
 
 for(const coin of coins) {
     if(cash === 0) break;
-    const count = Math.floor(cash / coin);
-    result += count;
-    cash -= coin * count;
+    result += Math.floor(cash / coin);
+    cash %= coin;
 }
 
 console.log(result);
