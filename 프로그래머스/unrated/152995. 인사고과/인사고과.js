@@ -1,20 +1,17 @@
 function solution(scores) {
-    const [wanhoX, wanhoY] = scores[0];
-    const wanhoSum = wanhoX + wanhoY;
-    
+    const [wanhoA, wanhoB] = scores[0];
+    let ranks = 1;
+    let max = 0;
     scores.sort((a, b) => b[0] - a[0] || a[1] - b[1]);
     
-    let maxY = 0;
-    let answer = 1;
-    
-    for(const [x, y] of scores) {
-        if(y < maxY) {
-            if(x === wanhoX && y === wanhoY) return -1;
+    for(const [a, b] of scores) {
+        if(b < max) {
+            if(a === wanhoA && b === wanhoB) return -1;
         } else {
-            maxY = Math.max(maxY, y);
-            if(x + y > wanhoSum) answer += 1;
+            if(a + b > wanhoA + wanhoB) ranks += 1;
+            max = Math.max(max, b);
         }
     }
     
-    return answer;
+    return ranks;
 }
