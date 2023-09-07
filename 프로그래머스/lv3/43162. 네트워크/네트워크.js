@@ -1,46 +1,32 @@
-class Queue {
-    constructor() {
-        this.queue = [];
-        this.front = 0;
-        this.rear = 0;
-    }
-    size() {
-        return this.rear - this.front;
-    }
-    enqueue(value) {
-        this.queue.push(value);
-        this.rear += 1;
-    }
-    dequeue() {
-        const value = this.queue[this.front];
-        delete this.queue[this.front++];
-        return value;
-    }
-}
-
 function solution(n, computers) {
-    let answer = 0;
+    const connected = Array.from({length: n}, () => []);
     const visited = Array(n).fill(false);
-    const bfs = (computer) => {
-        const queue = new Queue();
-        queue.enqueue(computer);
-        visited[computer] = true;
+    const bfs = (start) => {
+        const queue = [start];
+        visited[start] = true;
         
-        while(queue.size()) {
-            const now = queue.dequeue();
-            
-            for(let i = 0; i < n; i++) {
-                if(computers[now][i] === 0 || visited[i]) continue;
-                visited[now] = true;
-                queue.enqueue(i);
+        while(queue.length) {
+            const now = queue.shift();
+            for(const next of connected[now]) {
+                if(visited[next]) continue;
+                visited[next] = true;
+                queue.push(next);
             }
         }
     };
     
     for(let i = 0; i < n; i++) {
-        if(visited[i]) continue;
-        bfs(i);
+        for(let j = 0; j < n; j++) {
+            if(computers[i][j] === 0 || i === j) continue;
+            connected[i].push(j);
+        }
+    }
+    
+    let answer = 0;
+    for(let computer = 0; computer < n; computer++) {
+        if(visited[computer]) continue;
         answer += 1;
+        bfs(computer);
     }
     
     return answer;
