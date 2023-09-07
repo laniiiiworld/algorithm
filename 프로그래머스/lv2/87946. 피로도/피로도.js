@@ -4,12 +4,13 @@ function solution(k, dungeons) {
     const visited = Array(n).fill(false);
     const dfs = (hp, count) => {
         answer = Math.max(answer, count);
+        
         for(let i = 0; i < n; i++) {
-            if(visited[i]) continue;
-            const [minHp, usedHp] = dungeons[i];
-            if(hp < minHp) continue;
+            const [neededHp, useupHp] = dungeons[i];
+            if(visited[i] || hp < neededHp) continue;
+            
             visited[i] = true;
-            dfs(hp - usedHp, count + 1);
+            dfs(hp - useupHp, count + 1);
             visited[i] = false;
         }
     };
