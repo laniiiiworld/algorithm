@@ -1,21 +1,30 @@
 function solution(fees, records) {
-    const parkingTime = {};
+    const [baseMinute, basePrice, unitMinute, unitPrice] = fees;
+    const getMinute = (time) => {
+        const [hh24, mm] = time.split(':').map(Number);
+        return hh24 * 60 + mm;
+    };
+    const getFee = (minute) => {
+        minute -= baseMinute;
+        if(minute <= 0) return basePrice;
+        return basePrice + Math.ceil(minute / unitMinute) * unitPrice;
+    };
     
-    records.forEach(r => {
-        let [time, id, type] = r.split(' ');
-        let [h, m] = time.split(':');
-        time = (h * 1) * 60 + (m * 1);
-        if (!parkingTime[id]) parkingTime[id] = 0;
-        if (type === 'IN') parkingTime[id] += (1439 - time);
-        if (type === 'OUT') parkingTime[id] -= (1439 - time);
-    });
-    
-    const answer = [];
-    for (let [car, time] of Object.entries(parkingTime)) {
-        if (time <= fees[0]) time = fees[1];
-        else time = Math.ceil((time - fees[0]) / fees[2]) * fees[3] + fees[1]
-        answer.push([car, time]);
+    const cars = new Map();
+    for(const record of records) {
+        const [time, car, inout] = record.split(' ');
+        const mm = getMinute(time);
+        const times = cars.get(car) || [];
+        times.push(inout === 'IN'? -1 * mm : mm);
+        cars.set(car, times);
     }
     
-    return answer.sort((a, b) => a[0] - b[0]).map(v => v[1]);
+    return [...cars.keys()]
+            .sort((a, b) => a - b)
+            .map(car => {
+                const times = cars.get(car);
+                if(times.length % 2) times.push(getMinute('23:59'));
+                const totalTime = times.reduce((acc, cur) => acc += cur, 0);
+                return getFee(totalTime);
+            });
 }
