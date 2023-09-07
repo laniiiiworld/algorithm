@@ -1,19 +1,23 @@
 function solution(progresses, speeds) {
-    const answer = [];
-    const days = progresses.map((progress, index) => Math.ceil((100 - progress) / speeds[index]));
+    const remainedWork = [];
+    for(let i = 0; i < progresses.length; i++) {
+        const remained = (100 - progresses[i]) / speeds[i];
+        remainedWork.push(Math.ceil(remained));
+    }
+    remainedWork.push(Infinity);
     
+    const answer = [];
+    let now = remainedWork[0];
     let count = 0;
-    let now = days[0];
-    for(const value of days) {
-        if(now >= value) {
+    for(const day of remainedWork) {
+        if(day <= now) {
             count += 1;
         } else {
             answer.push(count);
+            now = day;
             count = 1;
-            now = value;
         }
     }
-    answer.push(count);
     
     return answer;
 }
