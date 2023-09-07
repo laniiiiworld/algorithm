@@ -1,15 +1,18 @@
 function solution(numbers, target) {
-    let answer = 0;
-    const dfs = (acc, index) => {
+    let count = 0;
+    const dfs = (index, sum) => {
         if(index === numbers.length) {
-            answer += (acc === target)? 1 : 0;
+            if(sum === target) {
+                count += 1;
+            }
             return;
         }
-        dfs(acc + numbers[index], index + 1);
-        dfs(acc - numbers[index], index + 1);
+        
+        dfs(index + 1, sum + numbers[index]);
+        dfs(index + 1, sum - numbers[index]);
     };
     
     dfs(0, 0);
     
-    return answer;
+    return count;
 }
