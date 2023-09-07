@@ -1,9 +1,5 @@
 function solution(progresses, speeds) {
-    const remainedWork = [];
-    for(let i = 0; i < progresses.length; i++) {
-        const remained = (100 - progresses[i]) / speeds[i];
-        remainedWork.push(Math.ceil(remained));
-    }
+    const remainedWork = progresses.map((p, i) => Math.ceil((100 - p) / speeds[i]));
     remainedWork.push(Infinity);
     
     const answer = [];
