@@ -1,17 +1,16 @@
 function solution(n, t, m, p) {
-    let answer = '';
-    let number = 0;
-    let str = (number).toString(n);
+    let tube = '';
+    let nowNumber = 0;
+    let numbersListed = '0';
     
-    let i = p - 1;
-    while(t > 0) {
-        while(str.length <= i) {
-            str += (++number).toString(n).toUpperCase();
+    for(let index = 0; index < t; index++) {
+        const nextIndex = m * index + (p - 1);
+        while(numbersListed.length - 1 < nextIndex) {
+            nowNumber += 1;
+            numbersListed += nowNumber.toString(n).toUpperCase();
         }
-        answer += str[i];
-        i += m;
-        t -= 1;
+        tube += numbersListed[nextIndex];
     }
     
-    return answer;
+    return tube;
 }
