@@ -1,32 +1,29 @@
 function solution(begin, target, words) {
-    const n = words.length;
-    const m = begin.length;
-    const visited = Array(n).fill(false);
-    let answer = n;
-    
-    const canBeChanged = (before, after) => {
+    let answer = words.length;
+    const visited = Array(words.length).fill(false);
+    const isChange = (before, after) => {
         let count = 0;
-        for(let i = 0; i < m; i++) {
+        for(let i = 0; i < before.length; i++) {
             if(before[i] === after[i]) continue;
             count += 1;
         }
         return count === 1;
     };
-    const dfs = (depth, text) => {
-        if(text === target) {
-            answer = Math.min(answer, depth);
+    const dfs = (now, count) => {
+        if(now === target) {
+            answer = Math.min(answer, count);
             return;
         }
         
-        for(let i = 0; i < n; i++) {
-            if(visited[i] || !canBeChanged(text, words[i])) continue;
+        for(let i = 0; i < words.length; i++) {
+            if(visited[i] || !isChange(now, words[i])) continue;
             visited[i] = true;
-            dfs(depth + 1, words[i]);
+            dfs(words[i], count + 1);
             visited[i] = false;
         }
     };
     
-    dfs(0, begin);
+    dfs(begin, 0);
     
-    return answer === n ? 0 : answer;
+    return answer === words.length? 0 : answer;
 }
