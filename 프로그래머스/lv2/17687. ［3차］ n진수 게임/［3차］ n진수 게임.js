@@ -7,10 +7,10 @@ function solution(n, t, m, p) {
         const nextIndex = m * index + (p - 1);
         while(numbersListed.length - 1 < nextIndex) {
             nowNumber += 1;
-            numbersListed += nowNumber.toString(n).toUpperCase();
+            numbersListed += nowNumber.toString(n);
         }
         tube += numbersListed[nextIndex];
     }
     
-    return tube;
+    return tube.toUpperCase();
 }
