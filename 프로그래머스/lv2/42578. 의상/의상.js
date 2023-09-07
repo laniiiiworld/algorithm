@@ -1,15 +1,15 @@
 function solution(clothes) {
-    let answer = 1;
-    const myClothes = new Map();
+    const clothesByType = new Map();
     
-    for(const [value, key] of clothes) {
-        const count = myClothes.get(key) || 0;
-        myClothes.set(key, count + 1);
+    for(const [item, type] of clothes) {
+        const items = clothesByType.get(type) || [];
+        items.push(item);
+        clothesByType.set(type, items);
     }
-
-    for(const value of myClothes.values()) {
-        answer *= (value + 1);
+    
+    let answer = 1;
+    for(const items of clothesByType.values()) {
+        answer *= (items.length + 1);
     }
-
     return answer - 1;
 }
