@@ -1,30 +1,27 @@
 function solution(topping) {
-    let count = 0;
-    
-    const a = new Map();
-    const b = new Map();
+    const a = new Set(); //철수
+    const b = new Map(); //동생
     
     for(const value of topping) {
-        const count = a.get(value) || 0;
-        a.set(value, count + 1);
+        const count = b.get(value) || 0;
+        b.set(value, count + 1);
     }
     
+    let answer = 0;
+    
     for(const value of topping) {
-        const countA = a.get(value) || 0;
-        const countB = b.get(value) || 0;
-        
-        if(countA > 1) {
-            a.set(value, countA - 1);
+        if(a.size > b.size) break;
+        a.add(value);
+        const count = b.get(value) - 1;
+        if(count > 0) {
+            b.set(value, count);
         } else {
-            a.delete(value);
+            b.delete(value);
         }
-        
-        b.set(value, countB + 1);
-        
         if(a.size === b.size) {
-            count += 1;
+            answer += 1;
         }
     }
     
-    return count;
+    return answer;
 }
