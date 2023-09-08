@@ -7,50 +7,53 @@ class Queue {
     size() {
         return this.rear - this.front;
     }
-    enqueue(value) {
-        this.queue.push(value);
+    enqueue(item) {
+        this.queue.push(item);
         this.rear += 1;
     }
     dequeue() {
-        const value = this.queue[this.front];
+        const item = this.queue[this.front];
         delete this.queue[this.front++];
-        return value;
+        return item;
     }
 }
 function solution(n, wires) {
-    let answer = n;
     const bfs = (graph) => {
-        let result = 0;
+        let count = 1;
         const visited = Array(n + 1).fill(false);
         const queue = new Queue();
+        
         queue.enqueue(1);
         visited[1] = true;
         
         while(queue.size()) {
             const now = queue.dequeue();
             
-            result += 1;
-            
             for(const next of graph[now]) {
                 if(visited[next]) continue;
-                queue.enqueue(next);
                 visited[next] = true;
+                count += 1;
+                queue.enqueue(next);
             }
         }
         
-        return result;
+        return count;
     };
+    let answer = n;
     
     for(let i = 0; i < wires.length; i++) {
-        const newWires = [...wires.slice(0, i), ...wires.slice(i + 1)];
+        const copyWires = [...wires.slice(0, i), ...wires.slice(i + 1)];
         const graph = Array.from({length: n + 1}, () => []);
-        for(const [start, end] of newWires) {
+        
+        for(const [start, end] of copyWires) {
             graph[start].push(end);
             graph[end].push(start);
         }
-        const network1 = bfs(graph);
-        const network2 = n - network1;
-        answer = Math.min(answer, Math.abs(network1 - network2));
+        
+        const connected = bfs(graph);
+        const gap = Math.abs(connected - (n - connected));
+        
+        answer = Math.min(answer, gap);
     }
     
     return answer;
