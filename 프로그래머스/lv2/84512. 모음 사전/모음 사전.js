@@ -1,24 +1,23 @@
-//중복순열
 function solution(word) {
-    let count = 0;
-    let isEqual = false;
-    const alphbets = ['A', 'E', 'I', 'O', 'U'];
-    const dfs = (before) => {
-        if(before === word) {
-            isEqual = true;
+    let answer = 0;
+    let isFind = false;
+    const alphabets = ['A', 'E', 'I', 'O', 'U'];
+    const dfs = (text) => {
+        if(text === word) {
+            isFind = true;
             return;
         }
+        answer += 1;
         
-        count += 1;
-        if(before.length === 5) return;
+        if(text.length === 5) return;
         
-        for(let i = 0; i < alphbets.length; i++) {
-            if(isEqual) return;
-            dfs(`${before}${alphbets[i]}`);
+        for(let i = 0; i < alphabets.length; i++) {
+            if(isFind) break;
+            dfs(`${text}${alphabets[i]}`);
         }
     };
     
     dfs('');
     
-    return count;
+    return answer;
 }
