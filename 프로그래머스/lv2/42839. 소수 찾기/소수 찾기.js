@@ -1,31 +1,32 @@
 function solution(numbers) {
-    const answer = new Set();
-    const n = numbers.length;
-    const visited = Array(n).fill(false);
-    const graph = numbers.split('');
-    const isPrime = (a) => {
-        if(a < 2) return false;
-        for(let i = 2; i * i <= a; i++) {
-            if(a % i === 0) return false;
+    const numberList = new Set();
+    const visited = Array(numbers.length).fill(false);
+    const makeNumbers = (number) => {
+        if(number && Number(number) !== 0 && Number(number) !== 1) {
+            numberList.add(Number(number));
         }
         
-        return true;
-    };
-    const dfs = (text) => {
-        if(isPrime(Number(text))) {
-            answer.add(Number(text));
-        }
-        if(text.length === n) return;
-        
-        for(let i = 0; i < n; i++) {
+        for(let i = 0; i < numbers.length; i++) {
             if(visited[i]) continue;
             visited[i] = true;
-            dfs(text + graph[i]);
+            makeNumbers(`${number}${numbers[i]}`);
             visited[i] = false;
         }
     };
     
-    dfs('');
+    makeNumbers('');
     
-    return answer.size;
+    let answer = 0;
+    const isDecimal = (number) => {
+        for(let i = 2; i <= Math.sqrt(number); i++) {
+            if(number % i === 0) return false;
+        }
+        return true;
+    };
+    for(const value of numberList) {
+        if(!isDecimal(value)) continue;
+        answer += 1;
+    }
+    
+    return answer;
 }
