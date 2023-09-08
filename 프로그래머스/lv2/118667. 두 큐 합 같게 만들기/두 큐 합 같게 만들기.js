@@ -1,50 +1,53 @@
 class Queue {
+    #sum;
     constructor() {
         this.queue = [];
         this.front = 0;
         this.rear = 0;
-        this._sum = 0;
+        this.#sum = 0;
+    }
+    get sum() {
+        return this.#sum;
     }
     size() {
         return this.rear - this.front;
     }
-    getSum() {
-        return this._sum;
-    }
-    enqueue(value) {
-        this.queue.push(value);
+    insert(item) {
+        this.queue.push(item);
         this.rear += 1;
-        this._sum += value;
+        this.#sum += item;
     }
-    dequeue() {
-        const value = this.queue[this.front];
+    pop() {
+        const item = this.queue[this.front];
         delete this.queue[this.front++];
-        this._sum -= value;
-        return value;
+        this.#sum -= item;
+        return item;
     }
 }
 
-function solution(q1, q2) {
-    const queue1 = new Queue();
-    const queue2 = new Queue();
-    for(const value of q1) queue1.enqueue(value);
-    for(const value of q2) queue2.enqueue(value);
-    const target = (queue1.getSum() + queue2.getSum()) / 2;
-    
-    if(target !== Math.floor(target)) return -1;
-    
-    let count = 0;
-    while(count < q1.length * 3) {
-        if(queue1.getSum() === queue2.getSum()) return count;
-        
-        count += 1;
-        
-        if(queue1.getSum() < queue2.getSum()) {
-            queue1.enqueue(queue2.dequeue());
-        } else {
-            queue2.enqueue(queue1.dequeue());
-        }
+function solution(queue1, queue2) {
+    const n = queue1.length;
+    const q1 = new Queue();
+    const q2 = new Queue();
+    for(let i = 0; i < n; i++) {
+        q1.insert(queue1[i]);
+        q2.insert(queue2[i]);
     }
     
-    return -1;
+    if((q1.sum + q2.sum) % 2) return -1;
+    
+    let count = 0;
+    while(q1.sum !== q2.sum) {
+        while(q1.sum < q2.sum) {
+            q1.insert(q2.pop());
+            count += 1;
+        }
+        if(q2.sum < q1.sum) {
+            q2.insert(q1.pop());
+            count += 1;
+        }
+        if(count >= n * 3) return -1;
+    }
+    
+    return count;
 }
