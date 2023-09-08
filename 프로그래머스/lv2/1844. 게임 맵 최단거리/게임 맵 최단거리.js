@@ -12,33 +12,32 @@ class Queue {
         this.rear += 1;
     }
     dequeue() {
-        const returnItem = this.queue[this.front];
+        const item = this.queue[this.front];
         delete this.queue[this.front++];
-        return returnItem;
+        return item;
     }
 }
+
 function solution(maps) {
     const n = maps.length - 1;
     const m = maps[0].length - 1;
-    const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
-    const canBeMoved = (row, col) => (row >= 0 && row <= n && col >= 0 && col <= m) && maps[row][col];
+    const canMove = (y, x) => (y >= 0 && y <= n && x >= 0 && x <= m) && maps[y][x];
     const bfs = (startY, startX) => {
         const queue = new Queue();
         queue.enqueue([startY, startX, 1]);
         
         while(queue.size()) {
-            const [nowY, nowX, count] = queue.dequeue();
+            const [y, x, count] = queue.dequeue();
             
-            if(maps[nowY][nowX] === 0) continue;
-            if(nowY === n && nowX === m) {
+            if(y === n && x === m) {
                 return count;
             }
-            maps[nowY][nowX] = 0;
             
-            for(const [plusY, plusX] of directions) {
-                const nextX = nowX + plusX;
-                const nextY = nowY + plusY;
-                if(!canBeMoved(nextY, nextX)) continue;
+            for(const [plusY, plusX] of [[-1, 0], [0, 1], [1, 0], [0, -1]]) {
+                const nextY = y + plusY;
+                const nextX = x + plusX;
+                if(!canMove(nextY, nextX)) continue;
+                maps[nextY][nextX] = 0;
                 queue.enqueue([nextY, nextX, count + 1]);
             }
         }
