@@ -1,19 +1,12 @@
 function solution(skill, skill_trees) {
-    const isPossible = (node) => {
-        let index = 0;
-        for(let i=0; i<node.length; i++) {
-            const value = node.charAt(i);
-            if(!skill.includes(value)) continue;
-            if(value !== skill.charAt(index)) return false;
-            index += 1;
+    return skill_trees.reduce((acc, nowSkill) => {
+        let checked = '';
+        for(let i = 0; i < nowSkill.length; i++) {
+            if(!skill.includes(nowSkill[i])) continue;
+            checked += nowSkill[i];
         }
-        return true;
-    };
-    let count = 0;
-    
-    for(const node of skill_trees) {
-        if(isPossible(node)) count += 1;
-    }
-    
-    return count;
+        const isInclude = skill.includes(checked);
+        const isEnable = checked === '' || (isInclude && checked[0] === skill[0]);
+        return acc += (isEnable? 1 : 0);
+    }, 0);
 }
