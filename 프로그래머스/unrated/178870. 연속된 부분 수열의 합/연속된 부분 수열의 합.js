@@ -1,18 +1,22 @@
 function solution(sequence, k) {
     const n = sequence.length;
-    let [start, end] = [0, n];
-    let [s, e] = [0, 0];
+    const checkGap = (start, end, result) => {
+        if(end - start - 1 < result[1] - result[0]) return true;
+        return false;
+    };
+    let answer = [0, n];
+    let [start, end] = [0, 0];
     let sum = 0;
     
-    while(s < n) {
-        while(sum < k && e < n) {
-            sum += sequence[e++];
+    while(start < n) {
+        while(sum < k && end < n) {
+            sum += sequence[end++];
         }
-        if(sum === k && end - start + 1 > e - s) {
-            [start, end] = [s, e - 1];
+        if(sum === k && checkGap(start, end, answer)) {
+            answer = [start, end - 1];
         }
-        sum -= sequence[s++];
+        sum -= sequence[start++];
     }
     
-    return [start, end];
+    return answer;
 }
