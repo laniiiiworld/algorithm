@@ -1,19 +1,16 @@
 function solution(n) {
     const answer = [];
-    const moveBlocks = (m, one, two, three) => {
-        if(m === 1) {
-            answer.push([one, three]);
+    const move = (count, start, mid, end) => {
+        if(count === 1) {
+            answer.push([start, end]);
             return;
         }
-        //m - 1개의 원판을 2번 기둥으로 이동
-        moveBlocks(m - 1, one, three, two);
-        //m번 원판을 3번 기둥으로 이동
-        answer.push([one, three]);
-        //m - 1개의 원판을 3번 기둥으로 이동
-        moveBlocks(m - 1, two, one, three);
+        move(count - 1, start, end, mid);
+        move(1, start, mid, end);
+        move(count - 1, mid, start, end);
     };
     
-    moveBlocks(n, 1, 2, 3);
+    move(n, 1, 2, 3);
     
     return answer;
 }
