@@ -7,32 +7,31 @@ class Queue {
     size() {
         return this.rear - this.front;
     }
-    enqueue(item) {
-        this.queue.push(item);
+    enqueue(value) {
+        this.queue.push(value);
         this.rear += 1;
     }
     dequeue() {
-        const item = this.queue[this.front];
+        const value = this.queue[this.front];
         delete this.queue[this.front++];
-        return item;
+        return value;
     }
 }
 function solution(n, edge) {
-    const distance = Array(n + 1).fill(Infinity);
+    const distance = Array(n + 1).fill(0);
     const graph = Array.from({length: n + 1}, () => []);
     const bfs = (start) => {
         const queue = new Queue();
-        queue.enqueue([start, 0]);
-        distance[start] = 0;
+        queue.enqueue(start);
+        distance[1] = 1;
         
         while(queue.size()) {
-            const [now, count] = queue.dequeue();
+            const now = queue.dequeue();
             
             for(const next of graph[now]) {
-                const calcDistance = count + 1;
-                if(distance[next] <= calcDistance) continue;
-                distance[next] = calcDistance;
-                queue.enqueue([next, calcDistance]);
+                if(distance[next]) continue;
+                distance[next] = distance[now] + 1;
+                queue.enqueue(next);
             }
         }
     };
@@ -42,9 +41,9 @@ function solution(n, edge) {
         graph[end].push(start);
     }
     
-    distance[0] = 0;
     bfs(1);
     
-    const max = Math.max(...distance);
-    return distance.filter(v => v === max).length;
+    const maxDistance = Math.max(...distance);
+    
+    return distance.filter(v => v === maxDistance).length;
 }
