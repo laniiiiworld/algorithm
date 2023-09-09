@@ -1,28 +1,50 @@
+class Queue {
+    #sum;
+    constructor() {
+        this.queue = [];
+        this.front = 0;
+        this.rear = 0;
+        this.#sum = 0;
+    }
+    get sum() {
+        return this.#sum;
+    }
+    size() {
+        return this.rear - this.front;
+    }
+    enqueue(value) {
+        this.queue.push(value);
+        this.#sum += value;
+        this.rear += 1;
+    }
+    dequeue() {
+        const value = this.queue[this.front];
+        delete this.queue[this.front++];
+        this.#sum -= value;
+        return value;
+    }
+}
+
 function solution(bridge_length, weight, truck_weights) {
-    let answer = 0;
-    const bridge = [];
-    let nextIndex = 0;
-    let nowWeight = 0;
+    const bridge = new Queue();
+    let seconds = 0;
+    let index = 0;
     
-    while(nextIndex < truck_weights.length) {
-        answer += 1;
-        bridge.forEach(car => car.time -= 1);
-        while(bridge.length && bridge[0].time === 0) {
-            const truck = bridge.shift();
-            nowWeight -= truck.weight;
-        }
-        if(bridge.length === bridge_length) continue;
-        while(nowWeight + truck_weights[nextIndex] > weight) {
-            const truck = bridge.shift();
-            nowWeight -= truck.weight;
-            answer += truck.time;
-            bridge.forEach(car => car.time -= truck.time);
-        }
-        
-        const truck = {weight: truck_weights[nextIndex++], time: bridge_length};
-        bridge.push(truck);
-        nowWeight += truck.weight;
+    for(let i = 0; i < bridge_length; i++) {
+        bridge.enqueue(0);
     }
     
-    return answer + bridge[bridge.length - 1].time;
+    while(index < truck_weights.length) {
+        seconds += 1;
+        bridge.dequeue();
+        const truck = truck_weights[index];
+        if(bridge.sum + truck <= weight) {
+            bridge.enqueue(truck);
+            index += 1;
+        } else {
+            bridge.enqueue(0);
+        }
+    }
+    
+    return seconds + bridge_length;
 }
