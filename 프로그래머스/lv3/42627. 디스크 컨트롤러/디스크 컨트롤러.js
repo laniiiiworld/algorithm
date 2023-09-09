@@ -43,6 +43,7 @@ class MinHeap {
             currentIndex = minIndex;
             leftIndex = currentIndex * 2;
             rightIndex = currentIndex * 2 + 1;
+            
             if(leftIndex >= this.heap.length - 1) break;
         }
         
@@ -52,32 +53,30 @@ class MinHeap {
         [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
     }
 }
+
 function solution(jobs) {
+    jobs.sort((a, b) => b[0] - a[0]);
+    
+    const heap = new MinHeap();
     const n = jobs.length;
-    const disk = new MinHeap();
-    let totalTime = 0; //작업의 요청부터 종료까지 걸린 시간
-    let time = 0; // 현재 시간
-    let jobIndex = 0;
+    let time = 0;
+    let totalWorkTime = 0;
     
-    jobs.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-    time = jobs[0][0];
-    
-    while(disk.size() || jobIndex < n) {
-        if(jobIndex < n) {
-            // 하드디스크가 작업을 수행하고 있지 않을 때에는 먼저 요청이 들어온 작업부터 처리
-            if(disk.size() === 0 && jobs[jobIndex][0] > time) {
-                time = jobs[jobIndex][0];
-            }
-            //추가로 요청이 들어온 작업들 disk에 넣기
-            while(jobIndex < n && jobs[jobIndex][0] <= time) {
-                disk.push(jobs[jobIndex++]);
-            }
+    while(heap.size() || jobs.length) {
+        while((!jobs.length || time < jobs[jobs.length - 1][0]) && heap.size()) {
+            const [startTime, requiredTime] = heap.pop();
+            const waitTime = time <= startTime? 0 : time - startTime;
+            const workTime = requiredTime + waitTime;
+            time = startTime + requiredTime + waitTime;
+            totalWorkTime += workTime;
         }
-        //disk에서 작업을 하나 꺼내 처리
-        const [requestTime, workTime] = disk.pop();
-        totalTime += time - requestTime + workTime;
-        time += workTime;
+        while(jobs.length && jobs[jobs.length - 1][0] <= time) {
+            heap.push(jobs.pop());
+        }
+        if(!heap.size() && jobs.length && jobs[jobs.length - 1][0] > time) {
+            time = jobs[jobs.length - 1][0];
+        }
     }
     
-    return Math.floor(totalTime / n);
+    return Math.floor(totalWorkTime / n);
 }
