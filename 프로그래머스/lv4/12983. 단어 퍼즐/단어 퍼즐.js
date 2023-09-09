@@ -1,17 +1,15 @@
 function solution(strs, t) {
-    const n = t.length;
-    const dp = Array(n + 1).fill(Infinity);
+    const dp = Array(t.length + 1).fill(Infinity);
+    const strsSet = new Set(strs);
     dp[0] = 0;
-    
-    for(let i = 0; i <= n; i++) {
-        for(let j = i; j >= Math.max(i - 5, 0); j--) {
-            const text = t.slice(j, i);
-            
-            if(!strs.includes(text)) continue;
-            
-            dp[i] = Math.min(dp[i], dp[j] + 1);
+
+    for (let i = 1; i <= t.length; i += 1) {
+        for (let j = i - 1; j >= Math.max(i - 5, 0); j -= 1) {
+            if (strsSet.has(t.slice(j, i))) {
+                dp[i] = Math.min(dp[i], dp[j] + 1);
+            }
         }
     }
-    
-    return dp[n] === Infinity? -1 : dp[n];
+
+    return dp[dp.length - 1] === Infinity ? -1 : dp[dp.length - 1];
 }
