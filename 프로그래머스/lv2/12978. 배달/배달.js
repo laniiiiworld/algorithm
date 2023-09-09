@@ -11,7 +11,7 @@ class MinHeap {
         let currentIndex = this.heap.length - 1;
         let parentIndex = Math.floor(currentIndex / 2);
         
-        while(parentIndex > 0 && this.heap[currentIndex][1] < this.heap[parentIndex][1]) {
+        while(parentIndex && this.heap[currentIndex][1] < this.heap[parentIndex][1]) {
             this._swap(currentIndex, parentIndex);
             currentIndex = parentIndex;
             parentIndex = Math.floor(currentIndex / 2);
@@ -38,9 +38,8 @@ class MinHeap {
         
         while((this.heap[leftIndex][1] < this.heap[currentIndex][1]) || 
               (this.heap[rightIndex][1] < this.heap[currentIndex][1])) {
-            const minIndex = (this.heap[leftIndex][1] < this.heap[rightIndex][1])? leftIndex : rightIndex;
+            const minIndex = (this.heap[leftIndex][1] <= this.heap[rightIndex][1])? leftIndex : rightIndex;
             this._swap(minIndex, currentIndex);
-            
             currentIndex = minIndex;
             leftIndex = currentIndex * 2;
             rightIndex = currentIndex * 2 + 1;
@@ -54,29 +53,30 @@ class MinHeap {
         [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
     }
 }
+
 function solution(N, road, K) {
     const distance = Array(N + 1).fill(Infinity);
     const graph = Array.from({length: N + 1}, () => []);
     const bfs = (start) => {
         const heap = new MinHeap();
-        heap.push([start, 0]);
         distance[start] = 0;
+        heap.push([start, 0]);
         
         while(heap.size()) {
-            const [now, nowCost] = heap.pop();
+            const [now, cost] = heap.pop();
             
-            for(const [next, plusCost] of graph[now]) {
-                const calcCost = nowCost + plusCost;
-                if(distance[next] <= calcCost) continue;
-                distance[next] = calcCost;
-                heap.push([next, calcCost]);
+            for(const [next, nextCost] of graph[now]) {
+                const calculated = cost + nextCost;
+                if(distance[next] < calculated) continue;
+                distance[next] = calculated;
+                heap.push([next, calculated]);
             }
         }
     };
     
-    for(const [a, b, cost] of road) {
-        graph[a].push([b, cost]);
-        graph[b].push([a, cost]);
+    for(const [start, end, cost] of road) {
+        graph[start].push([end, cost]);
+        graph[end].push([start, cost]);
     }
     
     bfs(1);
