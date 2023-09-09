@@ -63,19 +63,18 @@ function solution(jobs) {
     let totalWorkTime = 0;
     
     while(heap.size() || jobs.length) {
-        while((!jobs.length || time < jobs[jobs.length - 1][0]) && heap.size()) {
-            const [startTime, requiredTime] = heap.pop();
-            const waitTime = time <= startTime? 0 : time - startTime;
-            const workTime = requiredTime + waitTime;
-            time = startTime + requiredTime + waitTime;
-            totalWorkTime += workTime;
+        if(!heap.size() && jobs.length && jobs[jobs.length - 1][0] > time) {
+            time = jobs[jobs.length - 1][0];
         }
         while(jobs.length && jobs[jobs.length - 1][0] <= time) {
             heap.push(jobs.pop());
         }
-        if(!heap.size() && jobs.length && jobs[jobs.length - 1][0] > time) {
-            time = jobs[jobs.length - 1][0];
-        }
+        
+        const [startTime, requiredTime] = heap.pop();
+        const waitTime = time <= startTime? 0 : time - startTime;
+        const workTime = requiredTime + waitTime;
+        time = startTime + requiredTime + waitTime;
+        totalWorkTime += workTime;
     }
     
     return Math.floor(totalWorkTime / n);
