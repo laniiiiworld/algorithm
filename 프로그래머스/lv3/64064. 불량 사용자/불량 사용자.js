@@ -1,26 +1,21 @@
 function solution(user_id, banned_id) {
     const answer = new Set();
-    const users = user_id.map((v, i) => [v, i]);
     const banned = banned_id.map(v => {
         const value = v.replaceAll('*', '.');
-        return users.filter(v => {
-            const regexp = new RegExp(`^${value}$`);
-            return regexp.test(v[0]);
-        });
+        const regexp = new RegExp(`^${value}$`);
+        return user_id.filter(v => regexp.test(v));
     });
-    const n = user_id.length;
-    const visited = Array(n).fill(false);
-    const dfs = (depth, result) => {
-        if(depth === banned.length) {
-            answer.add(result.sort((a, b) => a - b).join(' '));
+    const visited = Array(user_id.length).fill(false);
+    const dfs = (now, list) => {
+        if(now === banned.length) {
+            answer.add(list.sort().join(' '));
             return;
         }
-        
-        const ids = banned[depth];
-        for(const [id, index] of ids) {
+        for(const id of banned[now]) {
+            const index = user_id.indexOf(id);
             if(visited[index]) continue;
             visited[index] = true;
-            dfs(depth + 1, [...result, index]);
+            dfs(now + 1, [...list, id]);
             visited[index] = false;
         }
     };
