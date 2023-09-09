@@ -1,57 +1,39 @@
-class Queue {
-    constructor() {
-        this.queue = [];
-        this.front = 0;
-        this.rear = 0;
-    }
-    size() {
-        return this.rear - this.front;
-    }
-    enqueue(item) {
-        this.queue.push(item);
-        this.rear += 1;
-    }
-    dequeue() {
-        const item = this.queue[this.front];
-        delete this.queue[this.front++];
-        return item;
-    }
-}
 function solution(maps) {
-    const answer = [];
     const n = maps.length;
     const m = maps[0].length;
-    const graph = maps.map(row => row.split(''));
+    const board = maps.map(row => row.split(''));
+    const canMove = (y, x) => y >= 0 && y < n && x >= 0 && x < m;
     const bfs = (y, x) => {
-        let result = 0;
-        const canMove = (row, col) => row >= 0 && row < n && col >= 0 && col < m && graph[row][col] !== 'X';
-        const queue = new Queue();
-        queue.enqueue([y, x]);
+        let result = Number(board[y][x]);
+        const queue = [];
+        queue.push([y, x]);
+        board[y][x] = 'X';
         
-        while(queue.size()) {
-            const [nowY, nowX] = queue.dequeue();
+        while(queue.length) {
+            const [nowY, nowX] = queue.shift();
             
-            if(graph[nowY][nowX] === 'X') continue;
-            result += Number(graph[nowY][nowX]);
-            graph[nowY][nowX] = 'X';
-                
             for(const [plusY, plusX] of [[-1, 0], [0, 1], [1, 0], [0, -1]]) {
                 const nextY = nowY + plusY;
                 const nextX = nowX + plusX;
-                if(!canMove(nextY, nextX)) continue;
-                queue.enqueue([nextY, nextX]);
+                if(!canMove(nextY, nextX) || board[nextY][nextX] === 'X') continue;
+                result += Number(board[nextY][nextX]);
+                board[nextY][nextX] = 'X';
+                queue.push([nextY, nextX]);
             }
         }
         
         return result;
     };
     
-    for(let row = 0; row < n; row++) {
-        for(let col = 0; col < m; col++) {
-            if(graph[row][col] === 'X') continue;
-            answer.push(bfs(row, col));
+    const answer = [];
+    for(let i = 0; i < n; i++) {
+        for(let j = 0; j < m; j++) {
+            if(board[i][j] === 'X') continue;
+            answer.push(bfs(i, j));
         }
     }
     
-    return answer.length? answer.sort((a, b) => a - b) : [-1];
+    if(answer.length === 0) return [-1];
+    
+    return answer.sort((a, b) => a - b);
 }
