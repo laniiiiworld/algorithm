@@ -2,7 +2,7 @@ function solution(s) {
     if(s.length <= 1) return 1;
     const n = s.length;
     const dp = Array.from({length: n}, () => Array(n).fill(0));
-    
+
     dp[0][0] = 1;
     for(let index = 1; index < n; index++) {
         dp[index][index] = 1;
@@ -10,7 +10,7 @@ function solution(s) {
              dp[index - 1][index] = 2;
         }
     }
-    
+
     for(let start = n - 2; start >= 0; start--) {
         for(let end = start + 1; end < n; end++) {
             if(s[start] === s[end]) {

@@ -1,10 +1,10 @@
 # [level 3] 가장 긴 팰린드롬 - 12904 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12904#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12904?language=javascript) 
 
 ### 성능 요약
 
-메모리: 98 MB, 시간: 138.73 ms
+메모리: 94.8 MB, 시간: 210.54 ms
 
 ### 구분
 
@@ -54,6 +54,10 @@ Empty
 
 <p>입출력 예 #2<br>
 2번째자리 'b'를 기준으로 "aba"가 팰린드롬이 되므로 3을 return합니다.</p>
+
+<hr>
+
+<p>※ 공지 - 2023년 8월 21일 테스트케이스가 추가되었습니다. 기존에 제출한 코드가 통과하지 못할 수도 있습니다.</p>
 
 
 > 출처: 프로그래머스 코딩 테스트 연습, https://programmers.co.kr/learn/challenges
