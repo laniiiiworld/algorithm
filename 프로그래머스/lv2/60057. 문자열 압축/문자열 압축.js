@@ -1,31 +1,18 @@
 function solution(s) {
-    if(s.length === 1) return 1;
+    const chunk = (s, n) => {
+        if(s.length <= n) return [s];
+        return [s.slice(0, n), ...chunk(s.slice(n), n)];
+    };
+    const compress = (s, n) => {
+        const make = ([a, l, c]) => `${a}${c > 1 ? c : ''}${l}`;
+        const arr = chunk(s, n).reduce(([a, l, c], e) => {
+            if(e === l) return [a, l, c + 1];
+            return [make([a, l, c]), e, 1];
+        }, ['', '', 0]);
+        
+        return make(arr);
+    };
     
-    const answer = new Set();
-    
-    for(let gap = 1; gap <= Math.floor(s.length / 2); gap++) {
-        let beforeText = s.substr(0,gap);
-        let nowText = '';
-        let count = 1; //반복 횟수
-        let compressed = ''; //압축된 문자열
-        let index = gap;
-        while(index < s.length) {
-            nowText = s.substr(index, gap);
-            if(beforeText === nowText) {
-                count++;
-            } else {
-                if(count > 1) compressed += count;
-                compressed += beforeText;
-                count = 1;
-            }
-            beforeText = nowText;
-            index += gap;
-        }
-        if(count > 1) compressed += count;
-        compressed += s.slice(index - gap);
-
-        answer.add(compressed);
-    }
-    
-    return [...answer].sort((a, b) => a.length - b.length)[0].length;
-}
+    const range = [...Array(s.length)].map((_, i) => i + 1);
+    return Math.min(...range.map(i => compress(s, i).length));
+};
