@@ -1,23 +1,20 @@
 function solution(enroll, referral, seller, amount) {
-    const members = new Map();
-    const setMoney = (key, plus) => {
-        const member = members.get(key) || {money : 0, parent: ''};
-        const minus = Math.floor(plus * 0.1);
-        members.set(key, {...member, money : member.money + plus - minus});
-        if(minus > 0) {
-            setMoney(member.parent, minus);
-        }
+    const parent = enroll.reduce((par, name, i) => {
+        par[name] = referral[i];
+        return par;
+    }, {});
+    const result = enroll.reduce((res, name) => {
+        res[name] = 0;
+        return res;
+    }, {});
+    const go = (name, benefit) => {
+        if(name === '-' || benefit === 0) return;
+        const up = parseInt(benefit / 10, 10);
+        result[name] += benefit - up;
+        go(parent[name], up);
     };
-    
-    for(let i = 0; i < enroll.length; i++) {
-        members.set(enroll[i], {money : 0, parent: referral[i]});
-    }
-    
-    for(let i = 0; i < seller.length; i++) {
-        const key = seller[i];
-        const member = members.get(key);
-        setMoney(key, amount[i] * 100);
-    }
-    
-    return enroll.map(v => members.get(v).money);
+    seller.forEach((name, i) => {
+        go(name, amount[i] * 100);
+    })
+    return Object.values(result);
 }
