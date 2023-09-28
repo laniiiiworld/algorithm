@@ -1,20 +1,18 @@
 function solution(targets) {
-    let count = 0;
-    let start = 0;
-    let end = 0;
-    
-    targets.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-    
-    for(const [s, e] of targets) {
-        if(s < end) {
-            start = s;
-            end = Math.min(end, e);
-            continue;
+    let answer = 1;
+    targets.sort((a, b) => a[1] - b[1]);
+    targets.sort((a, b) => a[0] - b[0]);
+
+    let e = targets[0][1];
+
+    for(const i of targets) {
+        if(e > i[0]) {
+            e = Math.min(i[1], e);
+        } else {
+            answer++;
+            e = i[1];
         }
-        start = s;
-        end = e;
-        count += 1;
     }
-    
-    return count;
+
+    return answer;
 }
