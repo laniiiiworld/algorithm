@@ -1,23 +1,17 @@
 function solution(k, ranges) {
-    const numbers = [k];
-    while(k > 1) {
-        if(k % 2) {
-            k = k * 3 + 1;
-        } else {
-            k /= 2;
-        }
-        numbers.push(k);
-    }
+    const accArea = [0];
+    let value = k;
     
-    const graph = Array(numbers.length).fill(0);
-    for(let i = 1; i < graph.length; i++) {
-        const min = Math.min(numbers[i - 1], numbers[i]);
-        const max = Math.max(numbers[i - 1], numbers[i]);
-        graph[i] = min + (max - min) / 2 + graph[i - 1];
+    while (value != 1) {
+        const nextValue = value % 2 ? value * 3 + 1 : value / 2;
+        accArea.push(accArea[accArea.length - 1] + (value + nextValue) / 2);
+        value = nextValue;
     }
-    
-    return ranges.map(([start, end]) => {
-        if(start > graph.length + end - 1) return -1;
-        return graph.at(end - 1) - graph.at(start);
+
+    return ranges.map(([a, b]) => {
+        if (a >= accArea.length || -b >= accArea.length) return -1;
+        const area = accArea[accArea.length - 1 + b] - accArea[a];
+        if (area < 0 || area == null) return -1;
+        return area;
     });
 }
