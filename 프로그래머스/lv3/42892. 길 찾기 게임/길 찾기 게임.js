@@ -29,10 +29,11 @@ function solution(nodeinfo) {
                     .map((v, i) => [...v, i + 1])
                     .sort((a, b) => b[1] - a[1] || a[0] - b[0]);
     const tree = new Tree(new Node(graph[0]));
-    
+
     for(let i = 1; i < graph.length; i++) {
         const [x, y, node] = graph[i];
         let now = tree.root;
+        
         while(true) {
             const [nowX, nowY, nowNode] = now.value;
             if(x < nowX) {
@@ -52,6 +53,6 @@ function solution(nodeinfo) {
             }
         }
     }
-    
+
     return [tree.preorder(tree.root, []), tree.postorder(tree.root, [])];
 }
