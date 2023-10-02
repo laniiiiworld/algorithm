@@ -1,17 +1,19 @@
 function solution(scores) {
-    const [wanhoA, wanhoB] = scores[0];
-    let ranks = 1;
-    let max = 0;
-    scores.sort((a, b) => b[0] - a[0] || a[1] - b[1]);
+  let answer = 0;
+  const wanho = scores[0];
     
-    for(const [a, b] of scores) {
-        if(b < max) {
-            if(a === wanhoA && b === wanhoB) return -1;
-        } else {
-            if(a + b > wanhoA + wanhoB) ranks += 1;
-            max = Math.max(max, b);
-        }
+  scores = scores.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : b[0] - a[0]));
+    
+  let max = 0;
+  for(let i = 0 ; i < scores.length; i++) {
+    const score = scores[i];
+    if (score[1] < max) {
+      if (score[0] === wanho[0] && score[1] === wanho[1]) return -1;
+    } else {
+      max = Math.max(max, score[1]);
+      if (score[0] + score[1] > wanho[0] + wanho[1]) answer++;
     }
+  }
     
-    return ranks;
+  return answer + 1;
 }
