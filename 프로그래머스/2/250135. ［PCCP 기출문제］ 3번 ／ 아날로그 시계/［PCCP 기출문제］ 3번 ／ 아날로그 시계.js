@@ -18,8 +18,7 @@ function solution(h1, m1, s1, h2, m2, s2) {
     };
     
     let count = 0;
-    if(nowDegrees.ss === nowDegrees.mi
-      || Math.floor(nowDegrees.mi) === Math.floor(nowDegrees.hh)) {
+    if(nowDegrees.ss === nowDegrees.mi) {
         count += 1;
     }
     
@@ -57,18 +56,6 @@ function minusOverDegree(nowDegrees) {
     if(nowDegrees.ss >= 360) nowDegrees.ss -= 360;
     if(nowDegrees.mi >= 360) nowDegrees.mi -= 360;
     if(nowDegrees.hh >= 360) nowDegrees.hh -= 360;
-    // if(nowDegrees.ss >= 360) {
-    //     nowDegrees.ss = 0;
-    //     nowDegrees.mi = Number(nowDegrees.mi.toFixed(1));
-    //     nowDegrees.hh = Number(nowDegrees.hh.toFixed(1));
-    // }
-    // if(nowDegrees.mi >= 360) {
-    //     nowDegrees.mi = 0;
-    //     nowDegrees.hh = Math.round(nowDegrees.hh);
-    // }
-    // if(nowDegrees.hh >= 360) {
-    //     nowDegrees.hh = 0;
-    // }
 }
 
 function hasMeet(a, b, prevDegrees, nowDegrees) {
